@@ -71,6 +71,33 @@ UI / design / build (as used on this project):
 | `skills/artifact-diagramming` | Diagrams for artifacts (inline-SVG mechanics) |
 | `skills/artifact-capabilities` | Runtime capabilities for published artifacts |
 
+### Premium motion websites
+
+The playbook and the libraries behind it. **Start at `premium-motion-site`** — it sequences
+everything else into one order of work and enforces the performance gate.
+
+| Skill | Purpose |
+|---|---|
+| `skills/premium-motion/premium-motion-site` | **The playbook.** Order of work for a high-end motion site: art direction → static structure → one signature interaction → choreography → micro-interactions → performance gate. Encodes the research below. |
+| `skills/premium-motion/hyperframes-motion` | 48 atomic motion rules, 22 scene blueprints, 16 transition catalogs, 7 runtime adapters (GSAP, CSS, WAAPI, Three.js, Anime.js, Lottie, TypeGPU) |
+| `skills/premium-motion/hyperframes-frames` | 13 complete design systems (locked palette, full type ramp, spacing, signature components) + an 18-token theme contract |
+| `skills/premium-motion/web-motion-stack` | 22 web-native skills — smooth scroll, page transitions, ScrollTrigger, Three.js / R3F / Babylon / PixiJS, Rive, Spline, Motion, react-spring, React Bits + Magic UI references, Blender→web pipeline |
+
+Provenance: [`HYPERFRAMES-UPSTREAM.md`](skills/premium-motion/HYPERFRAMES-UPSTREAM.md) (Apache-2.0),
+[`web-motion-stack/SKILL.md`](skills/premium-motion/web-motion-stack/SKILL.md) (MIT),
+[`GIST-motion-stack-setup.md`](skills/premium-motion/GIST-motion-stack-setup.md) (the source gist + verification notes).
+
+Two things worth knowing before using these:
+
+- **HyperFrames is a video renderer**, so its motion recipes assume a paused, seekable,
+  deterministic timeline. [`hyperframes-motion/WEB-CONTRACT.md`](skills/premium-motion/hyperframes-motion/WEB-CONTRACT.md)
+  translates them for the web — trigger-driven motion, mandatory `prefers-reduced-motion`,
+  no content hidden behind JS, no layout shift. **Read it before applying a harvested rule.**
+- **The premium toolchain is free** (GSAP including all former Club plugins since April 2025).
+  The cost is taste and performance engineering — ~60fps at 4× CPU throttle, LCP < 2.5s,
+  INP < 200ms, working reduced-motion. That gate is what separates a premium site from an
+  imitation, and it's step 6 of the playbook.
+
 Note: `artifact-design` and `artifact-diagramming` ship with Claude Code as inline skills (no
 asset files); their `SKILL.md` here is reconstructed from the skills' own instructions.
 
@@ -79,6 +106,12 @@ asset files); their `SKILL.md` here is reconstructed from the skills' own instru
 - [`research/MiraiStitch-Research.md`](research/MiraiStitch-Research.md) — how Shopify works, a
   multi-tenant re-engineering design (Postgres + RLS), an AI store-builder design, the
   competitive wedge for South Africa, and a phased plan of action.
+- [`research/Premium-Motion-Websites-Research.md`](research/Premium-Motion-Websites-Research.md) —
+  what a "$35,000 website" actually is (≈ **R583,600** at R16.675/USD), the US vs South African
+  pricing gap, Awwwards judging criteria and the real performance bar, and why the premium
+  toolchain being free means the cost is taste and performance engineering. **$35k is ~3× the top
+  of the entire SA agency range** — so the positioning is "motion-agency quality at SA prices",
+  never the dollar figure.
 
 ## Status
 
