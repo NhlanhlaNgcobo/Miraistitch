@@ -74,6 +74,12 @@ UI / design / build (as used on this project):
 Note: `artifact-design` and `artifact-diagramming` ship with Claude Code as inline skills (no
 asset files); their `SKILL.md` here is reconstructed from the skills' own instructions.
 
+## Research (`research/`)
+
+- [`research/MiraiStitch-Research.md`](research/MiraiStitch-Research.md) — how Shopify works, a
+  multi-tenant re-engineering design (Postgres + RLS), an AI store-builder design, the
+  competitive wedge for South Africa, and a phased plan of action.
+
 ## Status
 
 Prototype / demo. Pricing figures, the testimonial, and some copy are placeholders. The
