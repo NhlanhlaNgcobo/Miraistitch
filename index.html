@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MiraiStitch — Online stores for South African makers</title>
+<meta name="description" content="MiraiStitch gives South African makers, fashion labels and craft brands everything to sell online — ZAR checkout, local couriers, and a storefront worth showing off.">
+<meta property="og:title" content="MiraiStitch — Online stores for South African makers">
+<meta property="og:description" content="Beautifully tailored online stores for the brands you make. ZAR checkout, local payments and couriers, built in.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231c1917'/%3E%3Cpath d='M7 20 L13 11 L16 16 L19 11 L25 20' fill='none' stroke='%23d9a94e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' stroke-dasharray='3 2.4'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top" aria-label="MiraiStitch home">
+      <svg class="mk" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1c1917"/><path d="M7 20 L13 11 L16 16 L19 11 L25 20" fill="none" stroke="#d9a94e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 2.4"/></svg>
+      MiraiStitch
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#showcase">Showcase</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="app.html" class="signin">Sign in</a>
+      <a href="app.html" class="btn btn-gold mag">Start your store</a>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#showcase">Showcase</a>
+    <a href="#pricing">Pricing</a>
+    <a href="app.html" class="btn btn-gold">Start your store</a>
+  </nav>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero section">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="made-chip" data-load>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            Made for South African makers
+          </span>
+          <h1 class="hero-title" data-split>Beautifully tailored online stores for the brands you <em>make</em>.</h1>
+          <!-- signature: a stitch seam that draws itself under the headline -->
+          <svg class="seam-draw" viewBox="0 0 320 8" preserveAspectRatio="none" aria-hidden="true"><path d="M2 4 H318" stroke="#a16207" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="10 7"/></svg>
+          <p class="lede" data-load>MiraiStitch gives makers, fashion labels and craft brands everything to sell online — a storefront worth showing off, rand checkout, and the couriers your customers already trust.</p>
+          <div class="hero-cta" data-load>
+            <a href="app.html" class="btn btn-gold btn-lg mag">Start your store</a>
+            <a href="store.html" class="btn btn-ghost btn-lg">See a live store</a>
+          </div>
+          <div class="hero-stats" data-load>
+            <div class="hstat"><b data-count="3">3</b><span>core services</span></div>
+            <div class="hstat"><b data-count="10" data-suffix="+">10+</b><span>stack technologies</span></div>
+            <div class="hstat"><b data-count="6">6</b><span>steps to live</span></div>
+          </div>
+        </div>
+
+        <div class="hero-visual" data-tilt>
+          <div class="tilt-inner">
+            <div class="shopcard" aria-label="Example MiraiStitch storefront">
+              <div class="bar"><i></i><i></i><i></i><span>indlela.miraistitch.co.za</span></div>
+              <div class="hd">
+                <div class="st-name">Indlela Craft Co.</div>
+                <div class="st-tag">Handmade in KwaZulu-Natal</div>
+              </div>
+              <div class="pgrid">
+                <div class="pm"><div class="pm-img">🧺</div><div class="pm-b"><div class="pm-t">Ilala Basket</div><div class="pm-p">R420.00</div></div></div>
+                <div class="pm"><div class="pm-img alt">👜</div><div class="pm-b"><div class="pm-t">Shweshwe Tote</div><div class="pm-p">R249.00</div></div></div>
+                <div class="pm"><div class="pm-img alt">💠</div><div class="pm-b"><div class="pm-t">Beaded Hoops</div><div class="pm-p">R160.00</div></div></div>
+                <div class="pm"><div class="pm-img">🕯️</div><div class="pm-b"><div class="pm-t">Soy Candle</div><div class="pm-p">R180.00</div></div></div>
+              </div>
+              <div class="buy">Checkout · R1 009.00</div>
+            </div>
+            <!-- floating glass chips -->
+            <div class="fchip fchip-order" data-float="1"><span class="dot"></span>New order · <b>R420</b></div>
+            <div class="fchip fchip-rate" data-float="2">★ 4.9 <span>· 212 reviews</span></div>
+            <div class="fchip fchip-pay" data-float="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Paid via PayFast</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST MARQUEE -->
+  <section class="trust">
+    <div class="wrap">
+      <p>Works with the payments and couriers South Africans already use</p>
+    </div>
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track" id="trustTrack"></div>
+    </div>
+  </section>
+
+  <!-- FEATURES (bento, varied sizes) -->
+  <section class="section" id="features">
+    <div class="wrap">
+      <div class="sec-head" data-reveal>
+        <span class="kicker">Everything to sell</span>
+        <h2 class="stitch-h">A whole shop, stitched together</h2>
+        <p>No plugins to wrangle, no fees in dollars. Just the pieces a South African brand needs to open and grow.</p>
+      </div>
+
+      <div class="bento">
+        <article class="bcell span2 bcell-feature" data-reveal>
+          <div>
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 20V9"/></svg></div>
+            <h3>A storefront that feels yours</h3>
+            <p>Pick a look, drag blocks where you want them, publish. Clean, fast, mobile-first — no template that screams "template."</p>
+          </div>
+          <div class="mini-store" aria-hidden="true">
+            <span class="ms-dot" style="--i:0">🧺</span><span class="ms-dot" style="--i:1">👜</span><span class="ms-dot" style="--i:2">💠</span><span class="ms-dot" style="--i:3">🕯️</span>
+          </div>
+        </article>
+
+        <article class="bcell bcell-dark" data-reveal>
+          <div class="ic ic-dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></div>
+          <h3>Get paid, locally</h3>
+          <p>Money in rands, straight to your account.</p>
+          <div class="paychips"><span>PayFast</span><span>Yoco</span><span>Ozow</span><span>SnapScan</span></div>
+        </article>
+
+        <article class="bcell" data-reveal>
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/></svg></div>
+          <h3>Shipping that fits SA</h3>
+          <p>Pudo lockers, The Courier Guy, PAXI or pickup — real rates at checkout.</p>
+        </article>
+
+        <article class="bcell" data-reveal>
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7l8-4 8 4v10l-8 4-8-4z"/><path d="M4 7l8 4 8-4M12 11v10"/></svg></div>
+          <h3>Products & orders, one place</h3>
+          <p>Add stock, track orders, fulfil — from your laptop or your phone.</p>
+        </article>
+
+        <article class="bcell" data-reveal>
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 3v5c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <h3>VAT & POPIA, handled</h3>
+          <p>15% VAT worked out right and privacy built in.</p>
+        </article>
+
+        <article class="bcell span3 bcell-whatsapp" data-reveal>
+          <div class="wa-copy">
+            <div class="ic ic-wa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 18 3 21l3-1a9 9 0 103-3z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/></svg></div>
+            <h3>Sell on WhatsApp</h3>
+            <p>Turn a chat into a checkout — meet customers where they already shop and talk.</p>
+          </div>
+          <div class="wa-chat" aria-hidden="true">
+            <div class="wb in">Still have the Shweshwe tote? 👀</div>
+            <div class="wb out">We do! Here's a secure checkout link →</div>
+            <div class="wb pay">🔒 Pay R249 · PayFast</div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section how" id="how">
+    <div class="wrap">
+      <div class="sec-head" data-reveal>
+        <span class="kicker">From idea to open</span>
+        <h2>Open your store in an afternoon</h2>
+        <p>Three steps. No developer, no dollars, no drama.</p>
+      </div>
+      <hr class="seam seam-ink" style="margin-bottom:46px">
+      <div class="steps">
+        <div class="step" data-reveal>
+          <div class="n">1</div>
+          <h3>Set up your store</h3>
+          <p>Name it, pick a look, connect your payments. Most makers are done in about ten minutes.</p>
+          <span class="time">~10 minutes</span>
+        </div>
+        <div class="step" data-reveal>
+          <div class="n">2</div>
+          <h3>Add your products</h3>
+          <p>Photos, prices in rands, stock on hand. Add them one at a time or in a batch.</p>
+          <span class="time">Bulk or single</span>
+        </div>
+        <div class="step" data-reveal>
+          <div class="n">3</div>
+          <h3>Share and sell</h3>
+          <p>Send your link, post it, sell. Every order lands in your dashboard, ready to pack.</p>
+          <span class="time">Orders in one place</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE -->
+  <section class="section" id="showcase">
+    <div class="wrap">
+      <div class="sec-head" data-reveal>
+        <span class="kicker">Built for local trade</span>
+        <h2 class="stitch-h">Made for the way South Africa sells</h2>
+        <p>From township spaza to Sandton boutique — MiraiStitch suits the brands this country actually makes.</p>
+      </div>
+      <div class="cats">
+        <article class="cat c1" data-reveal data-tiltcard><div class="bg"></div><span class="cat-emoji">👗</span><h3>Fashion & apparel</h3><p>Labels, resellers, thrift</p></article>
+        <article class="cat c2" data-reveal data-tiltcard><div class="bg"></div><span class="cat-emoji">💠</span><h3>Beadwork & craft</h3><p>Handmade, one-of-a-kind</p></article>
+        <article class="cat c3" data-reveal data-tiltcard><div class="bg"></div><span class="cat-emoji">🌶️</span><h3>Food & spice</h3><p>Biltong, rubs, preserves</p></article>
+        <article class="cat c4" data-reveal data-tiltcard><div class="bg"></div><span class="cat-emoji">🕯️</span><h3>Home & décor</h3><p>Candles, ceramics, textiles</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="section" style="padding-block:40px 96px">
+    <div class="wrap">
+      <hr class="seam" style="margin-bottom:56px">
+      <div class="quote" data-reveal>
+        <blockquote>"It finally feels like a shop that matches the things I make — and my customers pay the way they already know how."</blockquote>
+        <p class="who">— A pilot store owner, Durban <span style="color:var(--stone-400)">(placeholder — swap for a real quote at launch)</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section" id="pricing" style="background:#fffdf9;border-top:1px solid var(--line)">
+    <div class="wrap">
+      <div class="pricing-top">
+        <div class="sec-head" data-reveal style="margin-bottom:0">
+          <span class="kicker">Simple, rand pricing</span>
+          <h2>Start free. Grow when you do.</h2>
+        </div>
+        <div class="toggle" data-reveal role="group" aria-label="Billing period">
+          <button id="billMonthly" class="on" aria-pressed="true">Monthly</button>
+          <button id="billAnnual" aria-pressed="false">Annual<span class="save">−2 months</span></button>
+        </div>
+      </div>
+      <div class="plans">
+        <article class="plan" data-reveal>
+          <div class="pl-name">Starter</div>
+          <div class="pl-price"><b>R0</b><span>/month</span></div>
+          <div class="pl-fee">2% per sale</div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> One storefront</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Local payments & couriers</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Up to 25 products</li>
+          </ul>
+          <a href="app.html" class="btn btn-ghost">Start free</a>
+        </article>
+        <article class="plan feat" data-reveal>
+          <div class="pl-name">Growth <span class="pl-badge">Popular</span></div>
+          <div class="pl-price"><b data-price data-monthly="R290" data-annual="R242">R290</b><span data-per>/month</span></div>
+          <div class="pl-fee">1% per sale</div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Everything in Starter</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Unlimited products</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> WhatsApp selling & discounts</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Your own domain</li>
+          </ul>
+          <a href="app.html" class="btn btn-gold mag">Choose Growth</a>
+        </article>
+        <article class="plan" data-reveal>
+          <div class="pl-name">Pro</div>
+          <div class="pl-price"><b data-price data-monthly="R690" data-annual="R575">R690</b><span data-per>/month</span></div>
+          <div class="pl-fee">0% platform fee</div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Everything in Growth</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> No per-sale platform fee</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Priority local support</li>
+          </ul>
+          <a href="app.html" class="btn btn-ghost">Choose Pro</a>
+        </article>
+      </div>
+      <p class="price-note">Launch pricing — indicative while we pilot. Payment-provider fees (e.g. PayFast) are separate.</p>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="cta-band" data-reveal>
+        <div class="cta-glow" aria-hidden="true"></div>
+        <h2>Your brand deserves a shop as good as your work.</h2>
+        <p>Open your MiraiStitch store today and start selling to South Africa by the weekend.</p>
+        <div class="hero-cta">
+          <a href="app.html" class="btn btn-gold btn-lg mag">Start your store</a>
+          <a href="#features" class="btn btn-ghost-light btn-lg">See everything it does</a>
+        </div>
+        <p class="hero-note">Free to start — no card needed.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="#top">
+          <svg class="mk" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1c1917"/><path d="M7 20 L13 11 L16 16 L19 11 L25 20" fill="none" stroke="#d9a94e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 2.4"/></svg>
+          MiraiStitch
+        </a>
+        <p>Commerce for South African makers, fashion labels and craft brands. Built in Durban by Mirai Stack.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#showcase">Showcase</a>
+        <a href="app.html">Admin demo</a>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Makers' stories</a>
+        <a href="#">Careers</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="foot-col">
+        <h4>Support</h4>
+        <a href="#">Help centre</a>
+        <a href="#">Setup guide</a>
+        <a href="#">Status</a>
+        <a href="#">POPIA & privacy</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> MiraiStitch · Durban, South Africa</span>
+      <span>Prices in ZAR · incl. 15% VAT where applicable</span>
+    </div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
