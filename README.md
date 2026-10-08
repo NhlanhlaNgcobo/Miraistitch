@@ -46,14 +46,33 @@ Static site — deploys to Vercel / Netlify / GitHub Pages as-is from the repo r
 
 ## Skills (`skills/`)
 
-Claude Code skills authored for this project. Drop a folder into `~/.claude/skills/` to
+The Claude Code skills used to build MiraiStitch. Drop a folder into `~/.claude/skills/` to
 install it.
+
+Authored for this project:
 
 | Skill | Purpose |
 |---|---|
 | `skills/seo-optimizer` | Structured SEO audits → prioritised, implementation-ready fixes |
 | `skills/lead-generation` | Lead-gen strategy, capture copy, nurture sequences |
 | `skills/web-animations` | Tasteful, performant GSAP/CSS motion with accessible defaults |
+
+UI / design / build (as used on this project):
+
+| Skill | Purpose |
+|---|---|
+| `skills/ui-ux-pro-max` | UI/UX design intelligence — styles, palettes, fonts, charts, stacks (searchable) |
+| `skills/baseline-ui` | Fast UI cleanup / polish pass |
+| `skills/frontend-design` | Distinctive, intentional visual-design direction |
+| `skills/fixing-accessibility` | ARIA, keyboard nav, focus, contrast, WCAG |
+| `skills/fixing-motion-performance` | Animation / scroll performance |
+| `skills/dataviz` | Charts, graphs, dashboards |
+| `skills/artifact-design` | Design fundamentals for claude.ai artifacts |
+| `skills/artifact-diagramming` | Diagrams for artifacts (inline-SVG mechanics) |
+| `skills/artifact-capabilities` | Runtime capabilities for published artifacts |
+
+Note: `artifact-design` and `artifact-diagramming` ship with Claude Code as inline skills (no
+asset files); their `SKILL.md` here is reconstructed from the skills' own instructions.
 
 ## Status
 
