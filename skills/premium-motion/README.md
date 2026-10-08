@@ -16,6 +16,9 @@ performance gate. The rest are reference libraries you pull from as the playbook
 | [`hyperframes-motion/`](hyperframes-motion/SKILL.md) | Motion craft — 48 atomic rules, 22 scene blueprints, 16 transition catalogs, 12 runtime adapter guides, 13 reference compositions | 118 files |
 | [`hyperframes-frames/`](hyperframes-frames/SKILL.md) | 13 complete design systems (locked palette, full type ramp, spacing, signature components) + an 18-token theme contract and 3 theme packs | 53 files |
 | [`web-motion-stack/`](web-motion-stack/SKILL.md) | 22 web-native skills — smooth scroll, page transitions, ScrollTrigger, Three.js / R3F / Babylon / PlayCanvas / PixiJS / A-Frame, Rive, Spline, Lottie, Anime.js, Motion, react-spring, React Bits + Magic UI references, Blender→web pipeline | 199 files |
+| [`motion-design-film/`](motion-design-film/SKILL.md) | **Video, not web.** HTML + Playwright + ffmpeg → MP4. Keep for when the deliverable is an actual video file. Its transferable craft is already extracted into the playbook. | 18 files |
+
+Don't miss: **[`premium-motion-site/references/anti-ai-motion.md`](premium-motion-site/references/anti-ai-motion.md)** — the named causes and fixes for machine-made motion (spring presets, the banned list, "one thing moves at a time", the silent one-sentence test, the critique loop, honesty rules). Consolidated from two independent video-practitioner sources.
 
 Research behind it: [`research/Premium-Motion-Websites-Research.md`](../../research/Premium-Motion-Websites-Research.md)
 
@@ -62,6 +65,7 @@ written specifically for web constraints.
 |---|---|---|---|
 | [HyperFrames](https://github.com/heygen-com/hyperframes) | Apache-2.0 | `188475a` | `hyperframes-motion` + `hyperframes-frames`. See [`HYPERFRAMES-UPSTREAM.md`](HYPERFRAMES-UPSTREAM.md) and [`HYPERFRAMES-LICENSE.txt`](HYPERFRAMES-LICENSE.txt) |
 | [ClaudeDesignSkills](https://github.com/freshtechbro/ClaudeDesignSkills) | MIT | `1da73fe` | `web-motion-stack` (22 of 23 skills). Licence in [`web-motion-stack/UPSTREAM-LICENSE.txt`](web-motion-stack/UPSTREAM-LICENSE.txt) |
+| [claude-motion-design](https://github.com/howseen-ai/claude-motion-design) | MIT | `3d90d34` | `motion-design-film` + the craft in `anti-ai-motion.md`. Excludes a 4.18 MB preview GIF and the Howseen trademark. © 2026 Howseen AI (Raphaël Aubry) |
 | [Motion-stack gist](https://gist.github.com/conradcaffier03/a0c6bbca47b7fae91f69fc998721e9b7) | — | `b5c7f0f` | The pointer that led here. Verbatim + verification notes in [`GIST-motion-stack-setup.md`](GIST-motion-stack-setup.md) |
 
 Harvested corpora are **unmodified**. The original work in this folder is
@@ -83,3 +87,10 @@ safe to ship here. Keep it that way.
   React Three Fiber.
 - `hyperframes-motion/examples/*.html` are paused video compositions — they open as a frozen
   frame. Run `window.__timelines.main.play()` in the console to watch one.
+- `motion-design-film/UPSTREAM-README.md` references an `examples/howseen-launch/` directory that
+  wasn't harvested (4.18 MB preview GIF + the Howseen trademark). A note at the top of that file
+  explains it; clone upstream directly to run the example.
+- **Two of the four harvested repos are video tools, not website tools** — `hyperframes-*` and
+  `motion-design-film`. Their craft transfers; their pipelines don't. The translations live in
+  `hyperframes-motion/WEB-CONTRACT.md` and
+  `premium-motion-site/references/anti-ai-motion.md`. Read those before mining either source.

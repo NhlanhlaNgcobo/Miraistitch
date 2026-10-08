@@ -82,6 +82,13 @@ everything else into one order of work and enforces the performance gate.
 | `skills/premium-motion/hyperframes-motion` | 48 atomic motion rules, 22 scene blueprints, 16 transition catalogs, 7 runtime adapters (GSAP, CSS, WAAPI, Three.js, Anime.js, Lottie, TypeGPU) |
 | `skills/premium-motion/hyperframes-frames` | 13 complete design systems (locked palette, full type ramp, spacing, signature components) + an 18-token theme contract |
 | `skills/premium-motion/web-motion-stack` | 22 web-native skills — smooth scroll, page transitions, ScrollTrigger, Three.js / R3F / Babylon / PixiJS, Rive, Spline, Motion, react-spring, React Bits + Magic UI references, Blender→web pipeline |
+| `skills/premium-motion/motion-design-film` | **Video, not web** — HTML + Playwright + ffmpeg → MP4. For when the deliverable is an actual video file. |
+
+Also: [`anti-ai-motion.md`](skills/premium-motion/premium-motion-site/references/anti-ai-motion.md) —
+the named causes and fixes for machine-made motion. Spring presets, the banned list, "one thing
+moves at a time", the silent one-sentence test, the critique loop, and honesty rules for numbers
+on screen. Two independent video-practitioner sources agree that bouncy overshoot is the single
+clearest tell of AI-made motion.
 
 Provenance: [`HYPERFRAMES-UPSTREAM.md`](skills/premium-motion/HYPERFRAMES-UPSTREAM.md) (Apache-2.0),
 [`web-motion-stack/SKILL.md`](skills/premium-motion/web-motion-stack/SKILL.md) (MIT),

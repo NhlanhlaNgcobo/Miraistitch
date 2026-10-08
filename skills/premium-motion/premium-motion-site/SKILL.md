@@ -33,6 +33,8 @@ Do these in order. Motion before art direction produces expensive-looking nonsen
 
 Pick a design system and commit. Do not blend two, and do not start from "clean and modern" — that is the absence of a decision, and it is what generic sites are made of.
 
+**Name a specific reference style** — "Linear launch", "Stripe docs", "Apple bumper". Never "premium modern". A named reference is checkable; an adjective is not. (`references/anti-ai-motion.md` §10)
+
 → **`../hyperframes-frames/`** — 13 pre-committed systems. Open two or three `frame-showcase.html` files, match to the content's register, then port tokens per that skill's `cqw`→`clamp()` guidance.
 → `../../frontend-design/` if the brand needs an original direction instead of a preset.
 → `../../ui-ux-pro-max/` — `data/typography.csv`, `data/colors.csv`, `data/google-fonts.csv` for substitutions.
@@ -124,7 +126,19 @@ Fix order when it fails: cut the heaviest effect → lazy-load the runtime → r
 
 ---
 
+### 7b — Critique, as a separate pass
+
+Motion quality comes from reviewing it, not from authoring it well first time. **Be a harsh motion director, not a proud author.**
+
+Score the page 1–10 on: hook in ~2s · readability at 360px · motion quality (nothing linear, no dead frames) · variety · composition · brand/data accuracy · response under 100ms. Then **fix only what scores ≤ 7, and do not touch anything at 9+.** Re-score until everything is 8+.
+
+Two rules that make it work: **judge ≠ builder** (review read-only, not as the author), and the **restate-from-visuals test** — if a fresh reviewer can't state the page's message from the visuals alone, the design fails regardless of motion quality.
+
+→ `references/anti-ai-motion.md` §8
+
 ## What makes it read as cheap
+
+**Full diagnosis: `references/anti-ai-motion.md`** — the named causes and fixes for machine-made motion, consolidated from two independent video-practitioner sources that agree bouncy overshoot is the single clearest tell.
 
 Ranked by how often it happens:
 
@@ -155,11 +169,21 @@ $35,000 ≈ **R583,600**, which is roughly **3× the top of the entire South Afr
 
 So **never quote the dollar figure to a South African merchant** — it is meaningless locally. The craft on this page is deliverable far below the headline number, and the honest framing is **"motion-agency quality at South African prices."** See the research doc §3 for the full market table.
 
+## Honesty gate
+
+Before anything ships to a customer: **no traceable source → no number on screen.** Anything illustrative is labelled "Example data". Never invent a product feature — check the code.
+
+This bites MiraiStitch directly: the landing page's R0 / R290 / R690 pricing and its testimonial are placeholders. They need real figures or a visible "Example" label.
+
+→ `references/anti-ai-motion.md` §7
+
 ## Skill map
 
 | Need | Skill |
 | --- | --- |
+| Anti-"AI motion" rules, spring presets, critique loop, honesty rules | **`references/anti-ai-motion.md`** |
 | Committed visual direction | `../hyperframes-frames/` (13 systems + 18-token theme contract) |
+| An actual **video** deliverable (not a website) | `../motion-design-film/` |
 | Original visual direction | `../../frontend-design/` |
 | Design intelligence, fonts, palettes, stacks | `../../ui-ux-pro-max/` |
 | Motion rules, blueprints, transitions | `../hyperframes-motion/` (**read `WEB-CONTRACT.md` first**) |
