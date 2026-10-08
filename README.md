@@ -113,6 +113,12 @@ asset files); their `SKILL.md` here is reconstructed from the skills' own instru
 - [`research/MiraiStitch-Research.md`](research/MiraiStitch-Research.md) — how Shopify works, a
   multi-tenant re-engineering design (Postgres + RLS), an AI store-builder design, the
   competitive wedge for South Africa, and a phased plan of action.
+- [`research/Claude-Skills-Landscape.md`](research/Claude-Skills-Landscape.md) — survey of the
+  most-adopted Claude skills for motion websites and marketing. **Marketing has a decisive winner**
+  ([coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills), 53.7k★, 13× the
+  nearest rival); **a popular "animated website builder" skill does not exist** — that category tops
+  out at 11 stars. The good motion knowledge lives in video repos, the good design knowledge in
+  static design skills, and nobody had joined them. Includes what to adopt next, with licences.
 - [`research/Premium-Motion-Websites-Research.md`](research/Premium-Motion-Websites-Research.md) —
   what a "$35,000 website" actually is (≈ **R583,600** at R16.675/USD), the US vs South African
   pricing gap, Awwwards judging criteria and the real performance bar, and why the premium
