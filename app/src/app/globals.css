@@ -49,9 +49,10 @@ label{display:block;font-size:.8rem;font-weight:600;color:var(--stone);margin-bo
 .pgrid{display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
 .pcard{background:var(--paper-2);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s var(--ease),box-shadow .25s}
 .pcard:hover{transform:translateY(-6px);box-shadow:0 24px 44px -26px rgba(26,23,20,.4)}
-.pcard .im{aspect-ratio:1/1;display:grid;place-items:center;font-size:62px;background:var(--gold-tint);overflow:hidden}
-.pcard .im span{transition:transform .5s var(--ease)}
-.pcard:hover .im span{transform:scale(1.12) rotate(-2deg)}
+.pcard .im{aspect-ratio:1/1;background:var(--gold-tint);overflow:hidden}
+.pcard .im img,.collection-product{display:block;width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease)}
+.collection-product{background-image:url('/images/products/monitor-4k.png');background-size:cover;background-position:center}
+.pcard:hover .im img,.pcard:hover .im .collection-product{transform:scale(1.08)}
 .pcard .bd{padding:16px;display:flex;flex-direction:column;flex:1}
 .pcard .nm{font-weight:600}
 .pcard .ds{color:var(--muted);font-size:.82rem;margin-top:2px}
@@ -59,18 +60,18 @@ label{display:block;font-size:.8rem;font-weight:600;color:var(--stone);margin-bo
 .pcard .add{margin-top:14px;justify-content:center}
 
 .b-banner{display:flex;align-items:center;gap:24px;background:linear-gradient(135deg,var(--ink),var(--gold-deep));color:#fff;border-radius:18px;padding:36px}
-.b-banner .em{font-size:52px}
+.banner-photo{width:112px;align-self:stretch;min-height:92px;border-radius:12px;background:url('/images/products/monitor-4k.png') center / cover no-repeat;flex:none}
 .b-banner h3{color:#fff;font-size:1.8rem}
 .b-banner p{color:rgba(255,255,255,.84);margin-top:4px}
 .b-banner .sf-btn{margin:0 0 0 auto;background:var(--gold-light);color:var(--ink);white-space:nowrap}
 .cr{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px}
 .cc{aspect-ratio:3/4;border-radius:16px;display:flex;flex-direction:column;justify-content:flex-end;padding:20px;color:#fff;position:relative;overflow:hidden;transition:transform .25s var(--ease)}
 .cc:hover{transform:translateY(-5px)}
-.cc .bg{position:absolute;inset:0;background:linear-gradient(160deg,var(--gold-deep),var(--ink));transition:transform .5s var(--ease)}
+.cc .bg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;transition:transform .5s var(--ease)}
 .cc:hover .bg{transform:scale(1.07)}
-.cc .em,.cc b{position:relative;z-index:1}
-.cc .em{font-size:34px;margin-bottom:auto}
-.cc b{font-family:var(--f-serif);font-weight:600;font-size:1.3rem;margin-top:8px}
+.category-copy{position:relative;z-index:1;display:grid;gap:2px}
+.cc b{font-family:var(--f-serif);font-weight:600;font-size:1.45rem;line-height:1.05}
+.cc span{font-size:.78rem;color:rgba(255,255,255,.84)}
 .b-quote{text-align:center;max-width:720px;margin:0 auto}
 .b-quote blockquote{font-family:var(--f-serif);font-size:clamp(1.7rem,3.6vw,2.4rem);font-weight:500;margin:0;line-height:1.25}
 .b-quote .who{color:var(--stone);margin-top:18px;font-size:.92rem}
@@ -92,7 +93,9 @@ label{display:block;font-size:.8rem;font-weight:600;color:var(--stone);margin-bo
 .sf-x:hover{background:var(--line)}
 .sf-items{flex:1;overflow-y:auto;padding:12px 20px}
 .ci{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);align-items:center}
-.ci .cim{width:52px;height:52px;border-radius:10px;background:var(--gold-tint);display:grid;place-items:center;font-size:26px;flex:none}
+.ci .cim{width:52px;height:52px;border-radius:10px;background:var(--gold-tint);overflow:hidden;flex:none}
+.ci .cim img,.ci .cim .collection-product{width:100%;height:100%}
+.checkout-image{width:42px;height:42px;object-fit:cover;border-radius:8px;flex:none}
 .ci .cit{font-weight:600;font-size:.9rem}
 .qty{display:inline-flex;align-items:center;border:1px solid var(--line-strong);border-radius:9px;margin-top:6px}
 .qty button{width:28px;height:28px;border:0;background:transparent;font-size:15px;cursor:pointer}
@@ -111,3 +114,10 @@ label{display:block;font-size:.8rem;font-weight:600;color:var(--stone);margin-bo
   .sf-hero .rise{animation:none}
   *{transition-duration:.01ms!important}
 }
+@media (max-width:620px){.b-banner{align-items:flex-start;padding:24px;gap:16px}.banner-photo{width:72px;min-height:72px}.b-banner .sf-btn{margin:18px 0 0}}
+
+/* Product cards link to the product page. .im and .nm became anchors, so they
+   need the link styling reset — added when /s/[slug]/p/[handle] landed. */
+.pcard .im{display:block}
+.pcard .nm{color:inherit;text-decoration:none;display:block}
+.pcard .nm:hover{color:var(--gold-deep)}

@@ -6,6 +6,37 @@ import { rand, vatPortion } from "@/lib/format";
 
 type Line = { product: Product; qty: number };
 
+const productPhotos: Record<string, string> = {
+  "27\" 4K Monitor": "/images/products/monitor-4k.png",
+  "Oak Desk Chair": "/images/products/oak-desk-chair.png",
+  "Wireless Earbuds": "/images/products/wireless-earbuds.png",
+  "Running Shoes": "/images/products/running-shoes.png",
+  "Cotton Towel Set": "/images/products/cotton-towel-set.png",
+  "Cordless Drill 18V": "/images/products/cordless-drill-18v.png",
+  "Modular Sofa": "/images/products/modular-sofa.png",
+  "Contemporary Apparel": "/images/products/apparel-look.png",
+  "Skincare Collection": "/images/products/skincare-set.png",
+  "Grocery Essentials": "/images/products/grocery-essentials.png",
+  "Outdoor Pack": "/images/products/outdoor-pack.png",
+};
+const categories = [
+  { name: "Electronics & tech", detail: "Phones, audio, computing", image: productPhotos["27\" 4K Monitor"] },
+  { name: "Furniture & home", detail: "Living, bedroom, office", image: productPhotos["Modular Sofa"] },
+  { name: "Fashion & apparel", detail: "Labels, resellers, footwear", image: productPhotos["Contemporary Apparel"] },
+  { name: "Beauty & wellness", detail: "Skincare, personal care, pharmacy", image: productPhotos["Skincare Collection"] },
+  { name: "Groceries & retail", detail: "FMCG, food, household", image: productPhotos["Grocery Essentials"] },
+  { name: "Sport & outdoor", detail: "Fitness, hiking, camping", image: productPhotos["Outdoor Pack"] },
+  { name: "Home textiles", detail: "Towels, bedding, soft furnishings", image: productPhotos["Cotton Towel Set"] },
+  { name: "Tools & hardware", detail: "DIY, trade, repair", image: productPhotos["Cordless Drill 18V"] },
+];
+
+function ProductVisual({ product, className = "" }: { product: Product; className?: string }) {
+  const source = product.image?.trim();
+  const photo = source?.startsWith("/") || source?.startsWith("http") ? source : productPhotos[product.title];
+  if (photo) return <img className={className} src={photo} alt={product.title} />;
+  return <span className={`collection-product ${className}`} role="img" aria-label={product.title} />;
+}
+
 export default function Storefront({
   store,
   products,
@@ -116,9 +147,15 @@ export default function Storefront({
               <div className="pgrid">
                 {products.map((prod) => (
                   <div className="pcard reveal" key={prod.id}>
-                    <div className="im"><span>{prod.image}</span></div>
+                    {/* image and title link to the product page; the Add button
+                        stays a button so quick-add still works from the grid */}
+                    <a className="im" href={`/s/${store.slug}/p/${(prod as unknown as Record<string, unknown>).slug as string || prod.id}`}>
+                      <ProductVisual product={prod} />
+                    </a>
                     <div className="bd">
-                      <div className="nm">{prod.title}</div>
+                      <a className="nm" href={`/s/${store.slug}/p/${(prod as unknown as Record<string, unknown>).slug as string || prod.id}`}>
+                        {prod.title}
+                      </a>
                       {prod.description && <div className="ds">{prod.description}</div>}
                       <div className="pr money">{rand(prod.price_cents)}</div>
                       <button className="btn gold add" disabled={prod.stock <= 0 || (cart[prod.id] ?? 0) >= prod.stock} onClick={() => add(prod)}>
@@ -135,17 +172,21 @@ export default function Storefront({
       case "banner":
         return (
           <section className="sf-sec" key={i}><div className="wrap"><div className="b-banner reveal">
-            <div className="em">{p.emoji || "🎁"}</div>
+            <div className="banner-photo" aria-hidden="true" />
             <div><h3>{p.heading}</h3>{p.sub && <p>{p.sub}</p>}</div>
             {p.btn && <button className="sf-btn" onClick={toProducts}>{p.btn}</button>}
           </div></div></section>
         );
       case "collection": {
-        const cats = [["👗", "Fashion"], ["💠", "Beadwork"], ["🌶️", "Food & spice"], ["🕯️", "Home"]];
         return (
           <section className="sf-sec" key={i}><div className="wrap">
             {p.title && <h2 className="reveal">{p.title}</h2>}
-            <div className="cr">{cats.map((c) => (<div className="cc reveal" key={c[1]}><div className="bg" /><span className="em">{c[0]}</span><b>{c[1]}</b></div>))}</div>
+            <div className="cr">{categories.map(({ name, detail, image }) => (
+              <div className="cc reveal" key={name}>
+                <div className="bg" style={{ backgroundImage: `linear-gradient(0deg, rgba(22,16,10,.82) 0%, rgba(22,16,10,.06) 62%), url(${image})` }} />
+                <div className="category-copy"><b>{name}</b><span>{detail}</span></div>
+              </div>
+            ))}</div>
           </div></section>
         );
       }
@@ -192,7 +233,7 @@ export default function Storefront({
           <h2 style={{ fontSize: "2rem", marginBottom: 24 }}>Checkout</h2>
           {lines.map((l) => (
             <div key={l.product.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 0", borderBottom: "1px solid var(--line)" }}>
-              <span style={{ fontSize: 26 }}>{l.product.image}</span>
+              <ProductVisual product={l.product} className="checkout-image" />
               <span style={{ flex: 1 }}>{l.product.title}</span>
               <input type="number" min={0} max={l.product.stock} value={l.qty} onChange={(e) => setQty(l.product.id, parseInt(e.target.value || "0", 10))} style={{ width: 64 }} />
               <span className="money" style={{ fontWeight: 700, minWidth: 90, textAlign: "right" }}>{rand(l.product.price_cents * l.qty)}</span>
@@ -242,7 +283,7 @@ export default function Storefront({
             <div className="sf-items">
               {lines.map((l) => (
                 <div className="ci" key={l.product.id}>
-                  <div className="cim">{l.product.image}</div>
+                  <div className="cim"><ProductVisual product={l.product} /></div>
                   <div style={{ flex: 1 }}>
                     <div className="cit">{l.product.title}</div>
                     <div className="money" style={{ color: "var(--gold-deep)", fontSize: ".82rem" }}>{rand(l.product.price_cents)}</div>

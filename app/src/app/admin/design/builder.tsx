@@ -10,7 +10,7 @@ type Cat = { label: string; def: Record<string, string>; fields: Field[] };
 const CAT: Record<string, Cat> = {
   hero: { label: "Hero", def: { heading: "Welcome", sub: "Shop our latest collection.", btn: "Shop now", align: "center" }, fields: [["heading", "Heading", "text"], ["sub", "Subtext", "textarea"], ["btn", "Button", "text"], ["align", "Align", "select:center,left"]] },
   products: { label: "Product grid", def: { title: "Products", cols: "3" }, fields: [["title", "Title", "text"], ["cols", "Columns", "select:2,3,4"]] },
-  banner: { label: "Promo banner", def: { emoji: "🎁", heading: "Free delivery over R500", sub: "This week only.", btn: "Shop" }, fields: [["emoji", "Emoji", "text"], ["heading", "Heading", "text"], ["sub", "Subtext", "text"], ["btn", "Button", "text"]] },
+  banner: { label: "Promo banner", def: { heading: "Free delivery over R500", sub: "This week only.", btn: "Shop" }, fields: [["heading", "Heading", "text"], ["sub", "Subtext", "text"], ["btn", "Button", "text"]] },
   collection: { label: "Collections", def: { title: "Shop by category" }, fields: [["title", "Title", "text"]] },
   testimonial: { label: "Testimonial", def: { quote: "Great quality, fast delivery.", author: "A happy customer" }, fields: [["quote", "Quote", "textarea"], ["author", "Author", "text"]] },
   newsletter: { label: "Newsletter", def: { heading: "Join the list", btn: "Subscribe" }, fields: [["heading", "Heading", "text"], ["btn", "Button", "text"]] },
@@ -22,7 +22,7 @@ function preview(b: Block): string {
   const p = b.props as Record<string, string>;
   if (b.type === "hero") return p.heading || "Hero";
   if (b.type === "products") return p.title || "Product grid";
-  if (b.type === "banner") return `${p.emoji ?? ""} ${p.heading ?? "Banner"}`;
+  if (b.type === "banner") return p.heading || "Banner";
   if (b.type === "collection") return p.title || "Collections";
   if (b.type === "testimonial") return `“${p.quote ?? ""}”`;
   if (b.type === "newsletter") return p.heading || "Newsletter";
@@ -101,10 +101,12 @@ export default function Builder({
     setAiBusy(true);
     setStatus("");
     try {
+      // store_id is required: /api/ai/generate re-checks ownership server-side
+      // before spending any model budget, rather than trusting the session alone.
       const res = await fetch("/api/ai/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify({ prompt, store_id: store.id }),
       });
       const data = await res.json();
       if (!res.ok) setStatus(`AI: ${data.error}`);
@@ -140,7 +142,7 @@ export default function Builder({
       <div className="card" style={{ padding: 16, marginTop: 18, display: "flex", gap: 10, alignItems: "flex-end", flexWrap: "wrap" }}>
         <div style={{ flex: 1, minWidth: 240 }}>
           <label>Generate with AI {aiEnabled ? "" : "(set ANTHROPIC_API_KEY to enable)"}</label>
-          <input value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="e.g. beaded jewellery, earthy, premium" disabled={!aiEnabled} />
+          <input value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="e.g. modern home office, practical and premium" disabled={!aiEnabled} />
         </div>
         <button className="btn" onClick={onGenerate} disabled={!aiEnabled || aiBusy}>{aiBusy ? "Generating…" : "Generate"}</button>
       </div>
