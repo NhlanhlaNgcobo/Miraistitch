@@ -96,7 +96,51 @@
   .sp-title{font-family:var(--f-serif);font-size:1.7rem;font-weight:600;margin:6px 0 18px}
   .sp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .sp-prod{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  /* ---- hero journey: browse -> product -> pay -> delivered ----
+     One browser frame, four stages swapped inside it. .sp-stage holds a fixed
+     min-height so swapping stages never shifts layout (CLS stays 0). Stage 1 is
+     visible by default, so with JS off or reduced motion the hero is a complete,
+     readable storefront rather than a blank box. */
+  .sp-stage{position:relative;padding:26px;min-height:360px}
+  .jst{position:absolute;inset:26px;opacity:0;visibility:hidden}
+  .jst[data-st="1"]{opacity:1;visibility:visible}
+  .jcursor{position:absolute;left:0;top:0;width:15px;height:15px;border-radius:50%;
+    background:var(--ink);border:2px solid var(--paper-2);box-shadow:0 3px 10px rgba(26,23,20,.45);
+    opacity:0;pointer-events:none;z-index:6;will-change:transform}
+  .jcursor.tap{box-shadow:0 0 0 9px rgba(161,98,7,.22),0 3px 10px rgba(26,23,20,.45)}
+
+  /* stage 2 — product detail */
+  .jp{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center;height:100%}
+  .jp-im{border-radius:12px;overflow:hidden;background:var(--gold-tint);aspect-ratio:1/1}
+  .jp-im img{width:100%;height:100%;object-fit:cover}
+  .jp-nm{font-family:var(--f-serif);font-size:1.5rem;font-weight:600;margin:4px 0 2px;line-height:1.1}
+  .jp-pr{color:var(--gold-deep);font-weight:800;font-size:1.15rem}
+  .jp-meta{color:var(--muted);font-size:.78rem;margin-top:4px}
+  .jbtn{margin-top:14px;background:var(--ink);color:var(--paper-2);border-radius:10px;text-align:center;
+    padding:12px;font-weight:600;font-size:.88rem;position:relative;overflow:hidden}
+
+  /* stage 3 — checkout */
+  .jrow{display:flex;justify-content:space-between;gap:12px;font-size:.84rem;padding:9px 0;border-bottom:1px solid var(--line)}
+  .jrow b{font-variant-numeric:tabular-nums}
+  .jrow.sub{color:var(--muted);font-size:.78rem}
+  .jrow.total{border-bottom:0;font-weight:700;font-size:1rem;padding-top:12px}
+  .jbtn.pay .ok{position:absolute;inset:0;display:grid;place-items:center;background:#1d6b4f;opacity:0}
+
+  /* stage 4 — delivery. Route uses the brand seam: gold, dashed, drawn. */
+  .jmap{display:block;width:100%;height:auto;margin:14px 0 0}
+  /* The route IS the brand seam: same gold, same dash. Revealed by clipping left to
+     right so each stitch keeps its true size — animating strokeDashoffset here would
+     fight the dash pattern instead of drawing it (see WEB-CONTRACT / the hero seam). */
+  .jroute{fill:none;stroke:var(--gold);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:4 4.4;
+    clip-path:inset(0% 100% 0% 0%)}
+  .jstore,.jhome{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linejoin:round}
+  .jvan{fill:var(--paper-2);stroke:var(--ink);stroke-width:2.1;stroke-linejoin:round}
+  .jdone{margin-top:12px;display:inline-flex;align-items:center;gap:8px;font-size:.84rem;font-weight:600;
+    background:var(--gold-tint);color:var(--gold-deep);border-radius:999px;padding:7px 14px}
+  .jdone .tick{color:#1d6b4f;font-weight:800}
+
   .sp-prod .im{aspect-ratio:4/3;display:grid;place-items:center;background:var(--gold-tint)}
+  .sp-prod .im img{width:100%;height:100%;object-fit:cover}
   .sp-prod .im svg{width:46%;height:auto;fill:none;stroke:var(--gold-deep);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;opacity:.8}
   .sp-prod .bd{padding:10px 12px}
   .sp-prod .nm{font-size:.82rem;font-weight:600}
@@ -245,11 +289,17 @@
   .g3{background:linear-gradient(160deg,#8a6d1f,#241c12)}
   .g4{background:linear-gradient(160deg,#4a4038,#1a1714)}
   @media(max-width:860px){.gal-pin{min-height:auto}.gal-card{height:50vh}}
-  /* 3D hero accent (ambient; sits behind content) */
+  /* 3D hero accent (ambient torus-knot "thread"; sits behind content).
+     DISABLED — superseded by the purchase-journey animation in the showpiece, which
+     tells the product story instead of decorating it. The canvas, its CSS and
+     initHero3D() are all kept intact: flip HERO3D to true in the script below to
+     bring it back. Hidden here as well so nothing paints if the flag is flipped
+     without also re-enabling the Three.js <script> tag. */
   .hero{position:relative}
   .hero > .wrap{position:relative;z-index:1}
   #hero3d{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.5}
   @media(max-width:860px){#hero3d{opacity:.32}}
+  #hero3d[hidden]{display:none}
 
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
 </style>
@@ -280,7 +330,8 @@
 <main id="top">
   <!-- HERO -->
   <section class="hero">
-    <canvas id="hero3d" aria-hidden="true"></canvas>
+    <!-- Torus-knot canvas — kept, hidden. See HERO3D in the script below. -->
+    <canvas id="hero3d" aria-hidden="true" hidden></canvas>
     <div class="wrap">
       <div class="hero-grid">
         <div class="hero-copy">
@@ -297,17 +348,66 @@
 
         <div class="hero-visual" data-hero-visual>
           <div class="hv-inner">
-          <div class="showpiece">
-            <div class="sp-bar"><i></i><i></i><i></i><span>northgate.miraistitch.co.za</span></div>
-            <div class="sp-body">
-              <div class="sp-eyebrow">NORTHGATE TRADING</div>
-              <div class="sp-title">Tech, home &amp; everything between</div>
-              <div class="sp-grid">
-                <div class="sp-prod"><div class="im"><svg viewBox="0 0 48 36" aria-hidden="true"><rect x="4" y="4" width="40" height="25" rx="2.5"/><path d="M18 33h12M24 29v4"/></svg></div><div class="bd"><div class="nm">27" 4K Monitor</div><div class="pr">R4 299.00</div></div></div>
-                <div class="sp-prod"><div class="im"><svg viewBox="0 0 48 36" aria-hidden="true"><path d="M12 4h24v14H12z"/><path d="M10 18h28v7H10zM14 25v7M34 25v7"/></svg></div><div class="bd"><div class="nm">Oak Desk Chair</div><div class="pr">R2 450.00</div></div></div>
+          <!-- The sale, end to end: browse -> product -> pay -> delivered.
+               The browser chrome never changes; only what is inside it transforms,
+               so the whole journey reads as one object rather than four cuts.
+               Stage 1 is the no-JS / reduced-motion resting state. -->
+          <div class="showpiece" data-journey>
+            <div class="sp-bar"><i></i><i></i><i></i><span data-jurl>northgate.miraistitch.co.za</span></div>
+            <div class="sp-stage">
+
+              <!-- 1 — browse the store -->
+              <div class="jst" data-st="1">
+                <div class="sp-eyebrow">NORTHGATE TRADING</div>
+                <div class="sp-title">Tech, home &amp; everything between</div>
+                <div class="sp-grid">
+                  <div class="sp-prod" data-pick><div class="im"><img src="images/products/w/running-shoes-640.webp" alt="Running shoes" width="640" height="640" loading="eager" decoding="async"></div><div class="bd"><div class="nm">Trail Running Shoes</div><div class="pr">R1 299.00</div></div></div>
+                  <div class="sp-prod"><div class="im"><img src="images/products/w/monitor-4k-640.webp" alt="27 inch 4K monitor" width="640" height="640" loading="lazy" decoding="async"></div><div class="bd"><div class="nm">27" 4K Monitor</div><div class="pr">R4 299.00</div></div></div>
+                  <div class="sp-prod"><div class="im"><img src="images/products/w/oak-desk-chair-640.webp" alt="Oak desk chair" width="640" height="640" loading="lazy" decoding="async"></div><div class="bd"><div class="nm">Oak Desk Chair</div><div class="pr">R2 450.00</div></div></div>
+                  <div class="sp-prod"><div class="im"><img src="images/products/w/skincare-set-640.webp" alt="Skincare collection" width="640" height="640" loading="lazy" decoding="async"></div><div class="bd"><div class="nm">Skincare collection</div><div class="pr">From R329.00</div></div></div>
+                </div>
               </div>
-              <div class="sp-buy">Checkout · R6 749.00</div>
+
+              <!-- 2 — the product they found -->
+              <div class="jst" data-st="2">
+                <div class="jp">
+                  <div class="jp-im"><img src="images/products/w/running-shoes-640.webp" alt="" width="640" height="640" loading="lazy" decoding="async"></div>
+                  <div class="jp-bd">
+                    <div class="sp-eyebrow">FOOTWEAR</div>
+                    <div class="jp-nm">Trail Running Shoes</div>
+                    <div class="jp-pr">R1 299.00</div>
+                    <div class="jp-meta">In stock · Ships in 1–2 days</div>
+                    <div class="jbtn" data-jadd>Add to cart</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 3 — checkout -->
+              <div class="jst" data-st="3">
+                <div class="sp-eyebrow">CHECKOUT</div>
+                <div class="sp-title" style="font-size:1.3rem">Secure payment</div>
+                <div class="jrow"><span>Trail Running Shoes × 1</span><b>R1 299.00</b></div>
+                <div class="jrow"><span>Delivery · Pudo locker</span><b>R 60.00</b></div>
+                <div class="jrow sub"><span>VAT included (15%)</span><b>R 177.26</b></div>
+                <div class="jrow total"><span>Total</span><b>R1 359.00</b></div>
+                <div class="jbtn pay" data-jpay><span class="lbl">Pay with PayFast</span><span class="ok">Paid ✓</span></div>
+              </div>
+
+              <!-- 4 — delivered. The route is the same gold seam as the brand mark. -->
+              <div class="jst" data-st="4">
+                <div class="sp-eyebrow">ON ITS WAY</div>
+                <div class="sp-title" style="font-size:1.3rem">Out for delivery</div>
+                <svg class="jmap" viewBox="0 0 320 132" aria-hidden="true">
+                  <path class="jroute" d="M26 104 C 80 104, 86 34, 150 34 S 240 96, 294 96" pathLength="100"/>
+                  <g class="jstore"><rect x="12" y="92" width="26" height="22" rx="3"/><path d="M12 92l5-8h16l5 8"/></g>
+                  <g class="jhome"><path d="M280 96v-14l14-11 14 11v14z"/><path d="M294 96v-9h0"/></g>
+                  <g class="jvan"><rect x="-13" y="-9" width="20" height="13" rx="2.5"/><path d="M7 -4h5l4 4v4H7z"/><circle cx="-6" cy="6" r="3"/><circle cx="11" cy="6" r="3"/></g>
+                </svg>
+                <div class="jdone"><span class="tick">✓</span> Delivered · Pudo, Umhlanga</div>
+              </div>
+
             </div>
+            <span class="jcursor" aria-hidden="true"></span>
           </div>
           <div class="fchip order"><span class="d"></span>New order · <b>R420</b></div>
           <div class="fchip rate">★ 4.9 <span>· 212 reviews</span></div>
@@ -511,7 +611,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<!-- Three.js r128 — only needed by the torus-knot hero accent, which is currently off
+     (HERO3D below). Left commented out rather than deleted so re-enabling is one step:
+     uncomment this tag and set HERO3D = true. Saves ~150 KB on every page load.
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+-->
+
 <script>
 (function(){
   "use strict";
@@ -522,7 +627,13 @@
   var yr=$("#yr"); if(yr) yr.textContent=new Date().getFullYear();
 
   // ---------- ambient 3D hero (Three.js; reduced-motion + no-WebGL safe) ----------
-  if (!RM && window.THREE) initHero3D();
+  // Torus-knot hero accent. Off: the purchase journey in the showpiece replaced it.
+  // To bring it back, set this to true AND uncomment the Three.js <script> in <head>.
+  var HERO3D = false;
+  if (HERO3D && !RM && window.THREE) {
+    var h3c = $("#hero3d"); if (h3c) h3c.hidden = false;
+    initHero3D();
+  }
   function initHero3D() {
     var canvas = $("#hero3d"); var host = $(".hero");
     if (!canvas || !host) return;
@@ -607,7 +718,7 @@
 
   // ---------- reduced motion / no GSAP: show everything, stop ----------
   if(RM || !G){
-    if($("#demoTxt")) $("#demoTxt").textContent="beaded jewellery, earthy, premium";
+    if($("#demoTxt")) $("#demoTxt").textContent="premium home office, modern, practical";
     var c=$("#demoCaret"); if(c) c.style.display="none";
     var cnt=$("[data-count]"); if(cnt) cnt.textContent="0";
     return;
@@ -691,7 +802,7 @@
   if(demo){
     var txtEl=$("#demoTxt"), caret=$("#demoCaret"), blocks=$$("[data-db]",demo);
     G.set(blocks,{opacity:0,y:16});
-    var phrase="beaded jewellery, earthy, premium";
+    var phrase="premium home office, modern, practical";
     ScrollTrigger.create({trigger:demo,start:"top 75%",once:true,onEnter:function(){
       var i=0, typer=setInterval(function(){
         txtEl.textContent=phrase.slice(0,i++);
@@ -737,6 +848,106 @@
     ScrollTrigger.create({trigger:el,start:"top 92%",once:true,
       onEnter:function(){ G.to(el, stitchVars(el, 16, 1.1)); }});
   });
+
+  // ---------- hero journey: browse -> product -> pay -> delivered ----------
+  // One object, four states. The browser chrome never moves; a cursor motivates each
+  // change so the swap reads as cause and effect rather than a slideshow. Pauses when
+  // off-screen or when the tab is hidden, so it costs nothing while unseen.
+  (function journey(){
+    var root=$("[data-journey]"); if(!root) return;
+    var stages=$$(".jst",root), cursor=$(".jcursor",root), url=$("[data-jurl]",root);
+    if(stages.length<4) return;
+
+    // Park the cursor where an element sits, in the showpiece's own coordinates.
+    function at(sel, dx, dy){
+      var el=$(sel,root); if(!el) return {x:0,y:0};
+      var a=el.getBoundingClientRect(), b=root.getBoundingClientRect();
+      return {x:a.left-b.left+a.width*(dx===undefined?.5:dx),
+              y:a.top-b.top+a.height*(dy===undefined?.5:dy)};
+    }
+    function moveTo(tl, sel, dx, dy, at_){
+      tl.to(cursor,{duration:.55,ease:"power2.inOut",
+        x:function(){return at(sel,dx,dy).x}, y:function(){return at(sel,dx,dy).y}}, at_);
+    }
+    function tap(tl, at_){
+      tl.call(function(){cursor.classList.add("tap")},null,at_)
+        .to(cursor,{scale:.82,duration:.09,ease:"power2.out"},at_)
+        .to(cursor,{scale:1,duration:.22,ease:"power2.out"},at_+0.09)
+        .call(function(){cursor.classList.remove("tap")},null,at_+0.4);
+    }
+    function show(tl, i, at_){                 // cross-dissolve one stage to the next
+      stages.forEach(function(s,k){
+        tl.to(s,{autoAlpha:k===i?1:0,y:k===i?0:-6,duration:.45,ease:"power2.out"},at_);
+      });
+      tl.fromTo(stages[i],{y:10},{y:0,duration:.5,ease:"power3.out"},at_);
+    }
+    function setUrl(tl, s, at_){ tl.call(function(){ if(url) url.textContent=s; },null,at_); }
+
+    G.set(stages,{autoAlpha:0}); G.set(stages[0],{autoAlpha:1,y:0});
+    G.set(cursor,{autoAlpha:0, x:at(".sp-grid",.5,.5).x, y:at(".sp-grid",.5,.5).y});
+
+    var route=$(".jroute",root), van=$(".jvan",root), pay=$("[data-jpay]",root);
+    if(route) G.set(route,{clipPath:SEAM_SHUT});
+    if(van) G.set(van,{autoAlpha:0});
+
+    var tl=G.timeline({repeat:-1, repeatDelay:.6, paused:true, defaults:{ease:"power2.out"}});
+
+    // 1 — browse
+    tl.to(cursor,{autoAlpha:1,duration:.3},0.2);
+    moveTo(tl,"[data-pick]",.5,.55,0.9);
+    tap(tl,1.5);
+
+    // 2 — the product they found
+    setUrl(tl,"northgate.miraistitch.co.za/trail-running-shoes",1.85);
+    show(tl,1,1.85);
+    moveTo(tl,"[data-jadd]",.5,.5,2.5);
+    tap(tl,3.15);
+
+    // 3 — checkout, then the pay button resolves
+    setUrl(tl,"northgate.miraistitch.co.za/checkout",3.5);
+    show(tl,2,3.5);
+    moveTo(tl,"[data-jpay]",.5,.5,4.1);
+    tap(tl,4.75);
+    if(pay){
+      tl.to($(".ok",pay),{autoAlpha:1,duration:.3},5.0)
+        .to(pay,{scale:.985,duration:.1},4.75)
+        .to(pay,{scale:1,duration:.3},4.85);
+    }
+
+    // 4 — delivered. The route draws as the same dashed gold seam, then the van runs it.
+    setUrl(tl,"northgate.miraistitch.co.za/track",5.9);
+    show(tl,3,5.9);
+    tl.to(cursor,{autoAlpha:0,duration:.3},5.9);
+    if(route) tl.to(route,{clipPath:SEAM_OPEN,duration:1.5,ease:"power1.inOut"},6.3);
+    if(van && route){
+      tl.to(van,{autoAlpha:1,duration:.2},6.35);
+      tl.to({p:0},{p:1,duration:1.5,ease:"power1.inOut",onUpdate:function(){
+        var L=route.getTotalLength(), t=this.targets()[0].p;
+        var a=route.getPointAtLength(L*t), b=route.getPointAtLength(Math.min(L,L*t+1));
+        van.setAttribute("transform","translate("+a.x+","+a.y+") rotate("+
+          (Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI)+")");
+      }},6.35);
+      tl.to(van,{autoAlpha:0,duration:.3},7.95);
+    }
+    tl.from($(".jdone",root),{autoAlpha:0,y:8,duration:.5},8.0);
+
+    // back to the shelf
+    setUrl(tl,"northgate.miraistitch.co.za",9.6);
+    show(tl,0,9.6);
+    tl.call(function(){
+      if(route) G.set(route,{clipPath:SEAM_SHUT});
+      if(pay) G.set($(".ok",pay),{autoAlpha:0});
+    },null,10.2);
+    tl.to({},{duration:.6},10.2);
+
+    // only run while it is actually on screen and the tab is visible
+    var vis=false, seen=false;
+    function sync(){ (seen && vis && !document.hidden) ? tl.play() : tl.pause(); }
+    new IntersectionObserver(function(e){ seen=e[0].isIntersecting; sync(); },{threshold:.25}).observe(root);
+    document.addEventListener("visibilitychange",sync);
+    vis=true; sync();
+    addEventListener("resize",function(){ tl.invalidate(); },{passive:true});
+  })();
 
   // ---------- pinned horizontal gallery (desktop) ----------
   var galTrack=$("#galTrack");
