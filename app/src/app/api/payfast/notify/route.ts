@@ -29,6 +29,38 @@ export async function POST(req: Request) {
   if (!orderId) return new NextResponse("OK");
 
   const db = createAdminClient();
+
+  // Credit-pack purchases use a "cr_" reference and are settled here, not in orders.
+  // grant_credits is idempotent on (reason, ref), so a replayed ITN cannot double-credit.
+  if (orderId.startsWith("cr_")) {
+    const { data: purchase } = await db
+      .from("credit_purchases")
+      .select("id,store_id,credits,amount_cents,status")
+      .eq("payment_ref", orderId)
+      .maybeSingle();
+    if (!purchase) return new NextResponse("OK");
+
+    if (Math.abs(purchase.amount_cents - grossCents) > 1) {
+      console.warn("[payfast] credit amount mismatch", purchase.amount_cents, grossCents);
+      return new NextResponse("OK");
+    }
+    if (status === "COMPLETE" && purchase.status !== "paid") {
+      await db
+        .from("credit_purchases")
+        .update({ status: "paid", pf_payment_id: data["pf_payment_id"] ?? null })
+        .eq("id", purchase.id);
+      await db.rpc("grant_credits", {
+        sid: purchase.store_id,
+        n: purchase.credits,
+        why: "purchase",
+        r: orderId,
+      });
+    } else if (status === "CANCELLED") {
+      await db.from("credit_purchases").update({ status: "failed" }).eq("id", purchase.id);
+    }
+    return new NextResponse("OK");
+  }
+
   const { data: order } = await db
     .from("orders")
     .select("id,number,email,total_cents,status,store_id")

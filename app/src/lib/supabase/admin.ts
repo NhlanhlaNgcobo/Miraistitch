@@ -10,3 +10,6 @@ export function createAdminClient() {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }
+
+/** Short alias — same client, same server-only rule. */
+export const admin = createAdminClient;
