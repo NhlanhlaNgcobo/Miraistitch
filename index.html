@@ -4,343 +4,723 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MiraiStitch — Online stores for South African makers</title>
-<meta name="description" content="MiraiStitch gives South African makers, fashion labels and craft brands everything to sell online — ZAR checkout, local couriers, and a storefront worth showing off.">
+<meta name="description" content="The South African way to sell online: an AI store builder, local payments with no sales fee, and delivery your customers trust. For makers, fashion, craft and food brands.">
 <meta property="og:title" content="MiraiStitch — Online stores for South African makers">
-<meta property="og:description" content="Beautifully tailored online stores for the brands you make. ZAR checkout, local payments and couriers, built in.">
+<meta property="og:description" content="An AI store builder, local payments with no platform sales fee, and local delivery — built for South African brands.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231c1917'/%3E%3Cpath d='M7 20 L13 11 L16 16 L19 11 L25 20' fill='none' stroke='%23d9a94e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' stroke-dasharray='3 2.4'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Cpath d='M7 20 L13 11 L16 16 L19 11 L25 20' fill='none' stroke='%23d9a94e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' stroke-dasharray='3 2.4'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="styles.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+<style>
+  /* ============================================================
+     MiraiStitch landing — "editorial fashion-house, Linear restraint"
+     One accent (gold). Kinetic serif headlines. Stillness between beats.
+     ============================================================ */
+  :root{
+    color-scheme: light;
+    --ink:#1a1714; --ink-soft:#2b2620;
+    --paper:#f6f3ee; --paper-2:#fffdf9;
+    --stone:#574e44; --muted:#8c8275;
+    --line:#e6ddd0; --line-strong:#d8cdbd;
+    --gold:#a16207; --gold-deep:#7a4e0a; --gold-light:#d9a94e; --gold-tint:#f3ead6;
+    --r:14px;
+    --f-serif:"Cormorant",Georgia,"Times New Roman",serif;
+    --f-sans:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --ease-standard:cubic-bezier(.6,0,.2,1);
+    --ease-emphasis:cubic-bezier(.2,.8,.2,1);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer}
+  h1,h2,h3{font-family:var(--f-serif);font-weight:600;letter-spacing:-.015em;line-height:1.02;margin:0;text-wrap:balance}
+  .wrap{width:100%;max-width:1160px;margin-inline:auto;padding-inline:26px}
+  section{position:relative}
+
+  /* word-mask reveal: words sit in an overflow-hidden sleeve, readable with JS off */
+  .rt-word{display:inline-block;overflow:hidden;vertical-align:top}
+  .rt-ink{display:inline-block;will-change:transform}
+  .accent{color:var(--gold-deep);font-style:italic}
+
+  /* eyebrow */
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--f-sans);font-weight:600;
+    font-size:.82rem;color:var(--gold-deep)}
+  .eyebrow .seam{width:30px;height:2px;background-image:linear-gradient(90deg,var(--gold) 0 6px,transparent 6px 11px);background-size:11px 2px}
+
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--f-sans);font-weight:600;font-size:.98rem;
+    padding:14px 24px;border-radius:999px;border:1.5px solid transparent;transition:background .25s var(--ease-standard),color .25s,border-color .25s;will-change:transform}
+  .btn:focus-visible{outline:3px solid var(--gold-light);outline-offset:3px}
+  .btn-gold{background:var(--ink);color:var(--paper-2)}
+  .btn-gold:hover{background:var(--gold-deep)}
+  .btn-ghost{background:transparent;border-color:var(--line-strong);color:var(--ink)}
+  .btn-ghost:hover{border-color:var(--ink)}
+  .btn svg{width:18px;height:18px}
+
+  /* ---------------- NAV ---------------- */
+  .nav{position:fixed;inset:0 0 auto 0;z-index:60;transition:background .3s,border-color .3s,backdrop-filter .3s;
+    border-bottom:1px solid transparent}
+  .nav.solid{background:rgba(246,243,238,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--f-serif);font-weight:700;font-size:1.4rem}
+  .brand .mk{width:32px;height:32px}
+  .nav-links{display:flex;gap:30px}
+  .nav-links a{color:var(--stone);font-size:.95rem;transition:color .2s}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-cta{display:flex;align-items:center;gap:14px}
+  .nav-cta .si{font-size:.95rem;font-weight:600}
+  .menu-btn{display:none;width:44px;height:44px;border:1.5px solid var(--line-strong);background:transparent;border-radius:12px;align-items:center;justify-content:center}
+  .menu-btn svg{width:22px;height:22px}
+  @media(max-width:860px){.nav-links,.nav-cta .si{display:none}.menu-btn{display:inline-flex}}
+
+  /* ---------------- HERO ---------------- */
+  .hero{padding:150px 0 70px}
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
+  .hero h1{font-size:clamp(2.9rem,6.4vw,5.4rem);font-weight:600}
+  .hero .sub{color:var(--stone);font-size:1.18rem;max-width:46ch;margin:26px 0 0}
+  .seam-draw{display:block;width:min(360px,80%);height:8px;margin:20px 0 0}
+  .hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+  .hero-foot{margin-top:22px;color:var(--muted);font-size:.9rem}
+  /* hero visual: one quiet object */
+  .showpiece{position:relative;border-radius:20px;border:1px solid var(--line);background:var(--paper-2);
+    box-shadow:0 40px 80px -40px rgba(26,23,20,.4);overflow:hidden;will-change:transform}
+  .sp-bar{display:flex;align-items:center;gap:7px;padding:14px 18px;border-bottom:1px solid var(--line)}
+  .sp-bar i{width:10px;height:10px;border-radius:50%;background:var(--line-strong)}
+  .sp-bar span{margin-left:8px;font-size:.78rem;color:var(--muted);font-family:var(--f-sans)}
+  .sp-body{padding:26px}
+  .sp-eyebrow{font-size:.74rem;color:var(--gold-deep);font-weight:600;letter-spacing:.04em}
+  .sp-title{font-family:var(--f-serif);font-size:1.7rem;font-weight:600;margin:6px 0 18px}
+  .sp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .sp-prod{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .sp-prod .im{aspect-ratio:4/3;display:grid;place-items:center;font-size:40px;background:var(--gold-tint)}
+  .sp-prod .bd{padding:10px 12px}
+  .sp-prod .nm{font-size:.82rem;font-weight:600}
+  .sp-prod .pr{font-size:.82rem;color:var(--gold-deep);font-weight:700;margin-top:2px}
+  .sp-buy{margin-top:16px;background:var(--ink);color:var(--paper-2);border-radius:10px;text-align:center;padding:12px;font-weight:600;font-size:.9rem}
+
+  /* ---------------- MARQUEE ---------------- */
+  .strip{padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:70px}
+  .strip-lead{text-align:center;color:var(--muted);font-size:.86rem;margin:0 0 20px}
+  .marquee{overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+  .mq-track{display:flex;gap:0;width:max-content;will-change:transform}
+  .mq-track span{font-family:var(--f-serif);font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:600;color:var(--ink);padding:0 28px;white-space:nowrap}
+  .mq-track span::after{content:"·";color:var(--gold);margin-left:28px}
+
+  /* ---------------- WEDGE ---------------- */
+  .wedge{background:var(--ink);color:var(--paper);padding:120px 0}
+  .wedge .eyebrow{color:var(--gold-light)}
+  .wedge h2{color:var(--paper);font-size:clamp(2.2rem,5.2vw,3.8rem);margin:18px 0 0;max-width:18ch}
+  .wedge .big{font-family:var(--f-serif);font-size:clamp(4rem,14vw,9rem);font-weight:600;line-height:.9;color:var(--gold-light);font-variant-numeric:tabular-nums}
+  .wedge p{color:#c9bfb2;font-size:1.1rem;max-width:52ch;margin:22px 0 0}
+  .wedge-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-top:40px}
+  .paychips{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+  .paychips span{font-family:var(--f-sans);font-weight:600;font-size:.85rem;color:var(--paper);
+    border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);padding:8px 15px;border-radius:999px}
+
+  /* ---------------- FEATURES (alternating editorial rows) ---------------- */
+  .feat{padding:120px 0}
+  .feat-row{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-bottom:110px}
+  .feat-row:last-child{margin-bottom:0}
+  .feat-row.flip .feat-copy{order:2}
+  .feat-copy h3{font-size:clamp(1.9rem,3.6vw,2.7rem);margin:16px 0 0}
+  .feat-copy p{color:var(--stone);font-size:1.06rem;margin:16px 0 0;max-width:42ch}
+  .feat-copy ul{list-style:none;padding:0;margin:20px 0 0;display:flex;flex-direction:column;gap:10px}
+  .feat-copy li{display:flex;gap:10px;align-items:flex-start;color:var(--stone);font-size:.98rem}
+  .feat-copy li svg{width:18px;height:18px;color:var(--gold-deep);flex:none;margin-top:3px}
+  .feat-visual{border-radius:18px;border:1px solid var(--line);background:var(--paper-2);min-height:320px;
+    box-shadow:0 30px 60px -36px rgba(26,23,20,.35);overflow:hidden;padding:26px;display:flex;flex-direction:column;justify-content:center}
+
+  /* AI builder mini-demo */
+  .demo-prompt{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:var(--paper);font-size:.92rem}
+  .demo-prompt .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex:none}
+  .demo-prompt .txt{color:var(--ink-soft)}
+  .demo-caret{display:inline-block;width:2px;height:1.05em;background:var(--gold);vertical-align:-2px;margin-left:1px}
+  .demo-blocks{display:flex;flex-direction:column;gap:11px;margin-top:18px}
+  .demo-blk{border-radius:10px;border:1px solid var(--line);background:var(--paper);padding:14px 16px;display:flex;align-items:center;gap:12px;will-change:transform}
+  .demo-blk .lab{font-size:.8rem;color:var(--muted);font-weight:600}
+  .demo-blk .mini{height:8px;border-radius:4px;background:var(--gold-tint);flex:1}
+  .demo-blk.hero .mini{height:26px}
+  .demo-note{font-size:.76rem;color:var(--muted);margin-top:14px;font-family:var(--f-sans)}
+
+  .courier-list{display:flex;flex-direction:column;gap:12px}
+  .courier{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--paper)}
+  .courier b{font-weight:600;font-size:.95rem}
+  .courier .r{font-weight:700;color:var(--gold-deep);font-variant-numeric:tabular-nums}
+  .wa{display:flex;flex-direction:column;gap:10px}
+  .wb{max-width:85%;padding:11px 14px;border-radius:15px;font-size:.9rem}
+  .wb.in{align-self:flex-start;background:var(--gold-tint);color:var(--ink-soft);border-bottom-left-radius:4px}
+  .wb.out{align-self:flex-end;background:var(--ink);color:var(--paper-2);border-bottom-right-radius:4px}
+
+  /* ---------------- HOW ---------------- */
+  .how{padding:110px 0;border-top:1px solid var(--line)}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:50px}
+  .step .n{font-family:var(--f-serif);font-size:3rem;font-weight:600;color:var(--gold-light);line-height:1}
+  .step h3{font-size:1.4rem;margin:10px 0 8px}
+  .step p{color:var(--stone);font-size:.98rem}
+
+  /* ---------------- PRICING ---------------- */
+  .pricing{padding:110px 0;border-top:1px solid var(--line);background:var(--paper-2)}
+  .ex-label{display:inline-block;font-family:var(--f-sans);font-weight:600;font-size:.72rem;color:var(--gold-deep);
+    background:var(--gold-tint);border:1px solid var(--line-strong);padding:4px 10px;border-radius:999px;margin-top:14px}
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+  .plan{border:1px solid var(--line);border-radius:var(--r);padding:30px 28px;background:var(--paper);display:flex;flex-direction:column}
+  .plan.feat{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+  .plan .pn{font-family:var(--f-serif);font-size:1.6rem;font-weight:600}
+  .plan .pp{margin:14px 0 2px;font-variant-numeric:tabular-nums}
+  .plan .pp b{font-family:var(--f-serif);font-size:2.6rem;font-weight:600}
+  .plan .pp span{color:var(--muted)}
+  .plan .pf{color:var(--stone);font-size:.88rem}
+  .plan ul{list-style:none;padding:0;margin:20px 0 24px;display:flex;flex-direction:column;gap:10px}
+  .plan li{display:flex;gap:9px;font-size:.93rem}
+  .plan li svg{width:17px;height:17px;color:var(--gold-deep);flex:none;margin-top:3px}
+  .plan .btn{margin-top:auto;justify-content:center}
+
+  /* ---------------- CTA + FOOTER ---------------- */
+  .cta{padding:120px 0}
+  .cta-inner{text-align:center}
+  .cta h2{font-size:clamp(2.4rem,6vw,4.2rem);max-width:16ch;margin:0 auto}
+  .cta p{color:var(--stone);font-size:1.1rem;margin:20px auto 0;max-width:40ch}
+  .cta .hero-cta{justify-content:center;margin-top:34px}
+  footer{border-top:1px solid var(--line);padding:50px 0 36px}
+  .foot-in{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:var(--muted);font-size:.86rem;align-items:center}
+
+  .sec-head{max-width:640px}
+  .sec-head h2{font-size:clamp(2rem,4.4vw,3rem);margin-top:16px}
+  .sec-head p{color:var(--stone);margin-top:16px;font-size:1.05rem}
+
+  @media(max-width:860px){
+    .hero{padding:120px 0 50px}
+    .hero-grid,.wedge-grid,.feat-row,.feat-row.flip .feat-copy{grid-template-columns:1fr;gap:40px;order:0}
+    .feat-row.flip .feat-visual{order:-1}
+    .steps,.plans{grid-template-columns:1fr}
+    .feat{padding:80px 0}.wedge{padding:80px 0}
+  }
+  /* ---- v2 motion: progress stitch, hero depth, gallery, tilt ---- */
+  .scrollbar{position:fixed;top:0;left:0;height:3px;width:100%;z-index:70;transform:scaleX(0);transform-origin:left center;
+    background-image:linear-gradient(90deg,var(--gold) 0 10px,transparent 10px 17px);background-size:17px 3px;background-repeat:repeat-x;pointer-events:none}
+  .hero-visual{perspective:1200px}
+  .hv-inner{position:relative;transform-style:preserve-3d;will-change:transform}
+  .fchip{position:absolute;z-index:3;background:rgba(255,253,249,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border:1px solid var(--line);box-shadow:0 16px 34px -18px rgba(26,23,20,.55);border-radius:12px;padding:9px 13px;
+    font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:7px;color:var(--ink)}
+  .fchip .d{width:7px;height:7px;border-radius:50%;background:#2e7d4f;box-shadow:0 0 8px #2e7d4f}
+  .fchip b{color:var(--gold-deep)}
+  .fchip.order{top:-14px;right:-16px}
+  .fchip.rate{bottom:46px;left:-26px}
+  .fchip.rate span{color:var(--muted);font-weight:500}
+  @media(max-width:560px){.fchip.rate{left:-6px}.fchip.order{right:-4px}}
+  .courier,.sp-prod{transition:transform .3s var(--ease-standard),box-shadow .3s}
+  .courier:hover,.sp-prod:hover{transform:translateY(-3px);box-shadow:0 16px 30px -20px rgba(26,23,20,.45)}
+  .plans{perspective:1100px}
+  .plan{will-change:transform}
+  /* pinned horizontal gallery */
+  .gallery{overflow:hidden;border-top:1px solid var(--line)}
+  .gal-head{padding:96px 0 12px}
+  .gal-pin{min-height:70vh;display:flex;align-items:center;overflow-x:auto;scrollbar-width:none}
+  .gal-pin::-webkit-scrollbar{display:none}
+  .gal-track{display:flex;gap:24px;padding:40px 26px;will-change:transform}
+  .gal-card{flex:0 0 clamp(260px,32vw,400px);height:58vh;border-radius:20px;overflow:hidden;position:relative;
+    display:flex;flex-direction:column;justify-content:flex-end;padding:30px;color:#fff;border:1px solid var(--line)}
+  .gal-card .bg{position:absolute;inset:0;z-index:0;transition:transform .6s var(--ease-standard)}
+  .gal-card:hover .bg{transform:scale(1.06)}
+  .gal-card>*{position:relative;z-index:1}
+  .gal-card .em{font-size:48px;margin-bottom:auto;filter:drop-shadow(0 6px 14px rgba(0,0,0,.35))}
+  .gal-card h3{color:#fff;font-size:2rem}
+  .gal-card p{color:rgba(255,255,255,.86);margin-top:6px;font-size:.92rem}
+  .g1{background:linear-gradient(160deg,#7a4e0a,#1a1714)}
+  .g2{background:linear-gradient(160deg,#5b4a2f,#201a16)}
+  .g3{background:linear-gradient(160deg,#8a6d1f,#241c12)}
+  .g4{background:linear-gradient(160deg,#4a4038,#1a1714)}
+  @media(max-width:860px){.gal-pin{min-height:auto}.gal-card{height:50vh}}
+  /* 3D hero accent (ambient; sits behind content) */
+  .hero{position:relative}
+  .hero > .wrap{position:relative;z-index:1}
+  #hero3d{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.5}
+  @media(max-width:860px){#hero3d{opacity:.32}}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
+<div class="scrollbar" id="scrollbar" aria-hidden="true"></div>
 
 <!-- NAV -->
 <header class="nav" id="nav">
   <div class="wrap nav-in">
     <a class="brand" href="#top" aria-label="MiraiStitch home">
-      <svg class="mk" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1c1917"/><path d="M7 20 L13 11 L16 16 L19 11 L25 20" fill="none" stroke="#d9a94e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 2.4"/></svg>
+      <svg class="mk" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1a1714"/><path d="M7 20 L13 11 L16 16 L19 11 L25 20" fill="none" stroke="#d9a94e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 2.4"/></svg>
       MiraiStitch
     </a>
     <nav class="nav-links" aria-label="Primary">
-      <a href="#features">Features</a>
       <a href="#how">How it works</a>
-      <a href="#showcase">Showcase</a>
+      <a href="#features">Features</a>
       <a href="#pricing">Pricing</a>
     </nav>
-    <div class="nav-actions">
-      <a href="app.html" class="signin">Sign in</a>
+    <div class="nav-cta">
+      <a href="app.html" class="si">Sign in</a>
       <a href="app.html" class="btn btn-gold mag">Start your store</a>
-      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-      </button>
+      <button class="menu-btn" id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
     </div>
   </div>
-  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
-    <a href="#features">Features</a>
-    <a href="#how">How it works</a>
-    <a href="#showcase">Showcase</a>
-    <a href="#pricing">Pricing</a>
-    <a href="app.html" class="btn btn-gold">Start your store</a>
-  </nav>
 </header>
 
 <main id="top">
   <!-- HERO -->
-  <section class="hero section">
+  <section class="hero">
+    <canvas id="hero3d" aria-hidden="true"></canvas>
     <div class="wrap">
       <div class="hero-grid">
         <div class="hero-copy">
-          <span class="made-chip" data-load>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-            Made for South African makers
-          </span>
-          <h1 class="hero-title" data-split>Beautifully tailored online stores for the brands you <em>make</em>.</h1>
-          <!-- signature: a stitch seam that draws itself under the headline -->
-          <svg class="seam-draw" viewBox="0 0 320 8" preserveAspectRatio="none" aria-hidden="true"><path d="M2 4 H318" stroke="#a16207" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="10 7"/></svg>
-          <p class="lede" data-load>MiraiStitch gives makers, fashion labels and craft brands everything to sell online — a storefront worth showing off, rand checkout, and the couriers your customers already trust.</p>
-          <div class="hero-cta" data-load>
-            <a href="app.html" class="btn btn-gold btn-lg mag">Start your store</a>
-            <a href="store.html" class="btn btn-ghost btn-lg">See a live store</a>
+          <span class="eyebrow" data-fade><span class="seam"></span>Commerce for South African makers</span>
+          <h1 data-rt data-accent="crafted">Open a store as crafted as the things you make.</h1>
+          <svg class="seam-draw" viewBox="0 0 360 8" preserveAspectRatio="none" aria-hidden="true"><path d="M2 4 H358" stroke="#a16207" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="11 7"/></svg>
+          <p class="sub" data-fade>The South African way to sell online — an AI store builder, local payments with no sales fee, and delivery your customers already trust.</p>
+          <div class="hero-cta" data-fade>
+            <a href="app.html" class="btn btn-gold mag">Start your store</a>
+            <a href="store.html" class="btn btn-ghost">See a live store</a>
           </div>
-          <div class="hero-stats" data-load>
-            <div class="hstat"><b data-count="3">3</b><span>core services</span></div>
-            <div class="hstat"><b data-count="10" data-suffix="+">10+</b><span>stack technologies</span></div>
-            <div class="hstat"><b data-count="6">6</b><span>steps to live</span></div>
-          </div>
+          <p class="hero-foot" data-fade>Free to start · Built for ZAR, VAT &amp; POPIA · Pay-ins via PayFast, Yoco, Ozow &amp; SnapScan</p>
         </div>
 
-        <div class="hero-visual" data-tilt>
-          <div class="tilt-inner">
-            <div class="shopcard" aria-label="Example MiraiStitch storefront">
-              <div class="bar"><i></i><i></i><i></i><span>indlela.miraistitch.co.za</span></div>
-              <div class="hd">
-                <div class="st-name">Indlela Craft Co.</div>
-                <div class="st-tag">Handmade in KwaZulu-Natal</div>
+        <div class="hero-visual" data-hero-visual>
+          <div class="hv-inner">
+          <div class="showpiece">
+            <div class="sp-bar"><i></i><i></i><i></i><span>indlela.miraistitch.co.za</span></div>
+            <div class="sp-body">
+              <div class="sp-eyebrow">INDLELA CRAFT CO.</div>
+              <div class="sp-title">Handmade in KwaZulu-Natal</div>
+              <div class="sp-grid">
+                <div class="sp-prod"><div class="im">🧺</div><div class="bd"><div class="nm">Ilala Basket</div><div class="pr">R420.00</div></div></div>
+                <div class="sp-prod"><div class="im">💠</div><div class="bd"><div class="nm">Beaded Hoops</div><div class="pr">R160.00</div></div></div>
               </div>
-              <div class="pgrid">
-                <div class="pm"><div class="pm-img">🧺</div><div class="pm-b"><div class="pm-t">Ilala Basket</div><div class="pm-p">R420.00</div></div></div>
-                <div class="pm"><div class="pm-img alt">👜</div><div class="pm-b"><div class="pm-t">Shweshwe Tote</div><div class="pm-p">R249.00</div></div></div>
-                <div class="pm"><div class="pm-img alt">💠</div><div class="pm-b"><div class="pm-t">Beaded Hoops</div><div class="pm-p">R160.00</div></div></div>
-                <div class="pm"><div class="pm-img">🕯️</div><div class="pm-b"><div class="pm-t">Soy Candle</div><div class="pm-p">R180.00</div></div></div>
-              </div>
-              <div class="buy">Checkout · R1 009.00</div>
+              <div class="sp-buy">Checkout · R580.00</div>
             </div>
-            <!-- floating glass chips -->
-            <div class="fchip fchip-order" data-float="1"><span class="dot"></span>New order · <b>R420</b></div>
-            <div class="fchip fchip-rate" data-float="2">★ 4.9 <span>· 212 reviews</span></div>
-            <div class="fchip fchip-pay" data-float="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Paid via PayFast</div>
+          </div>
+          <div class="fchip order"><span class="d"></span>New order · <b>R420</b></div>
+          <div class="fchip rate">★ 4.9 <span>· 212 reviews</span></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- TRUST MARQUEE -->
-  <section class="trust">
+  <!-- MARQUEE: what you sell -->
+  <section class="strip">
+    <p class="strip-lead">Built for the brands South Africa makes</p>
+    <div class="marquee"><div class="mq-track" id="mqTrack"></div></div>
+  </section>
+
+  <!-- WEDGE: no platform fee -->
+  <section class="wedge" id="why">
     <div class="wrap">
-      <p>Works with the payments and couriers South Africans already use</p>
-    </div>
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee-track" id="trustTrack"></div>
+      <span class="eyebrow" data-reveal><span class="seam"></span>Why MiraiStitch</span>
+      <div class="wedge-grid">
+        <div>
+          <h2 data-rt>Keep what you earn.</h2>
+          <p data-reveal>Shopify can't offer its own checkout in South Africa — so local sellers pay an extra platform fee on every sale, on top of their gateway. We don't. Your money is yours, in rands, in your account.</p>
+          <div class="paychips" data-reveal>
+            <span>PayFast</span><span>Yoco</span><span>Ozow</span><span>SnapScan</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="big"><span data-count="0">0</span>%</div>
+          <div style="color:#c9bfb2;font-size:1rem;margin-top:6px">platform fee on your sales</div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- FEATURES (bento, varied sizes) -->
-  <section class="section" id="features">
+  <!-- FEATURES -->
+  <section class="feat" id="features">
     <div class="wrap">
-      <div class="sec-head" data-reveal>
-        <span class="kicker">Everything to sell</span>
-        <h2 class="stitch-h">A whole shop, stitched together</h2>
-        <p>No plugins to wrangle, no fees in dollars. Just the pieces a South African brand needs to open and grow.</p>
+      <!-- Row 1: AI builder (signature micro-demo) -->
+      <div class="feat-row">
+        <div class="feat-copy">
+          <span class="eyebrow" data-reveal><span class="seam"></span>AI store builder</span>
+          <h3 data-rt>Describe your brand. Get a store.</h3>
+          <p data-reveal>Tell MiraiStitch what you sell and it lays out a storefront — hero, products, the lot — in your voice, in ZAR. Then drag, drop and make it yours.</p>
+          <ul data-reveal>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> From a one-line prompt to a full layout</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Edit by dragging blocks — or by chatting</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Local copy and pricing out of the box</li>
+          </ul>
+        </div>
+        <div class="feat-visual" data-demo>
+          <div class="demo-prompt"><span class="dot"></span><span class="txt" id="demoTxt"></span><span class="demo-caret" id="demoCaret"></span></div>
+          <div class="demo-blocks">
+            <div class="demo-blk hero" data-db><span class="lab">Hero</span><span class="mini"></span></div>
+            <div class="demo-blk" data-db><span class="lab">Products</span><span class="mini"></span></div>
+            <div class="demo-blk" data-db><span class="lab">Testimonial</span><span class="mini"></span></div>
+          </div>
+          <div class="demo-note">Illustration of the AI builder — your real store opens in the editor.</div>
+        </div>
       </div>
 
-      <div class="bento">
-        <article class="bcell span2 bcell-feature" data-reveal>
-          <div>
-            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 20V9"/></svg></div>
-            <h3>A storefront that feels yours</h3>
-            <p>Pick a look, drag blocks where you want them, publish. Clean, fast, mobile-first — no template that screams "template."</p>
+      <!-- Row 2: Local delivery -->
+      <div class="feat-row flip">
+        <div class="feat-copy">
+          <span class="eyebrow" data-reveal><span class="seam"></span>Local delivery</span>
+          <h3 data-rt>Shipping that fits South Africa.</h3>
+          <p data-reveal>Real courier rates at checkout — lockers, door-to-door or collection. The options your customers already use and trust.</p>
+        </div>
+        <div class="feat-visual" data-reveal>
+          <div class="courier-list">
+            <div class="courier"><b>Pudo locker-to-locker</b><span class="r">R60</span></div>
+            <div class="courier"><b>The Courier Guy · door</b><span class="r">R99</span></div>
+            <div class="courier"><b>PAXI · PEP store</b><span class="r">R60</span></div>
+            <div class="courier"><b>Local collection</b><span class="r">Free</span></div>
           </div>
-          <div class="mini-store" aria-hidden="true">
-            <span class="ms-dot" style="--i:0">🧺</span><span class="ms-dot" style="--i:1">👜</span><span class="ms-dot" style="--i:2">💠</span><span class="ms-dot" style="--i:3">🕯️</span>
-          </div>
-        </article>
+        </div>
+      </div>
 
-        <article class="bcell bcell-dark" data-reveal>
-          <div class="ic ic-dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></div>
-          <h3>Get paid, locally</h3>
-          <p>Money in rands, straight to your account.</p>
-          <div class="paychips"><span>PayFast</span><span>Yoco</span><span>Ozow</span><span>SnapScan</span></div>
-        </article>
-
-        <article class="bcell" data-reveal>
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/></svg></div>
-          <h3>Shipping that fits SA</h3>
-          <p>Pudo lockers, The Courier Guy, PAXI or pickup — real rates at checkout.</p>
-        </article>
-
-        <article class="bcell" data-reveal>
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7l8-4 8 4v10l-8 4-8-4z"/><path d="M4 7l8 4 8-4M12 11v10"/></svg></div>
-          <h3>Products & orders, one place</h3>
-          <p>Add stock, track orders, fulfil — from your laptop or your phone.</p>
-        </article>
-
-        <article class="bcell" data-reveal>
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 3v5c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
-          <h3>VAT & POPIA, handled</h3>
-          <p>15% VAT worked out right and privacy built in.</p>
-        </article>
-
-        <article class="bcell span3 bcell-whatsapp" data-reveal>
-          <div class="wa-copy">
-            <div class="ic ic-wa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 18 3 21l3-1a9 9 0 103-3z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/></svg></div>
-            <h3>Sell on WhatsApp</h3>
-            <p>Turn a chat into a checkout — meet customers where they already shop and talk.</p>
-          </div>
-          <div class="wa-chat" aria-hidden="true">
+      <!-- Row 3: WhatsApp -->
+      <div class="feat-row">
+        <div class="feat-copy">
+          <span class="eyebrow" data-reveal><span class="seam"></span>Sell on WhatsApp</span>
+          <h3 data-rt>Turn a chat into a checkout.</h3>
+          <p data-reveal>Meet customers where they already shop. Share a secure pay-link in the conversation and the order lands in your dashboard.</p>
+        </div>
+        <div class="feat-visual" data-reveal>
+          <div class="wa">
             <div class="wb in">Still have the Shweshwe tote? 👀</div>
-            <div class="wb out">We do! Here's a secure checkout link →</div>
-            <div class="wb pay">🔒 Pay R249 · PayFast</div>
+            <div class="wb out">We do — here's a secure checkout link</div>
+            <div class="wb out" style="background:var(--gold);color:var(--ink)">🔒 Pay R249 · PayFast</div>
           </div>
-        </article>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
-  <section class="section how" id="how">
-    <div class="wrap">
-      <div class="sec-head" data-reveal>
-        <span class="kicker">From idea to open</span>
-        <h2>Open your store in an afternoon</h2>
-        <p>Three steps. No developer, no dollars, no drama.</p>
+  <!-- SHOWCASE: pinned horizontal gallery -->
+  <section class="gallery" id="showcase">
+    <div class="wrap gal-head">
+      <span class="eyebrow" data-reveal><span class="seam"></span>Built for local trade</span>
+      <h2 data-rt style="font-size:clamp(2rem,4.4vw,3rem);margin-top:16px">Whatever South Africa makes.</h2>
+    </div>
+    <div class="gal-pin">
+      <div class="gal-track" id="galTrack">
+        <article class="gal-card"><div class="bg g1"></div><span class="em">👗</span><h3>Fashion &amp; apparel</h3><p>Labels, resellers, thrift</p></article>
+        <article class="gal-card"><div class="bg g2"></div><span class="em">💠</span><h3>Beadwork &amp; craft</h3><p>Handmade, one-of-a-kind</p></article>
+        <article class="gal-card"><div class="bg g3"></div><span class="em">🌶️</span><h3>Food &amp; spice</h3><p>Biltong, rubs, preserves</p></article>
+        <article class="gal-card"><div class="bg g4"></div><span class="em">🕯️</span><h3>Home &amp; décor</h3><p>Candles, ceramics, textiles</p></article>
+        <article class="gal-card"><div class="bg g1"></div><span class="em">🧺</span><h3>Weaving &amp; baskets</h3><p>Ilala palm, grass, reed</p></article>
       </div>
-      <hr class="seam seam-ink" style="margin-bottom:46px">
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section class="how" id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow" data-reveal><span class="seam"></span>From idea to open</span>
+        <h2 data-rt>Three steps to selling.</h2>
+      </div>
       <div class="steps">
-        <div class="step" data-reveal>
-          <div class="n">1</div>
-          <h3>Set up your store</h3>
-          <p>Name it, pick a look, connect your payments. Most makers are done in about ten minutes.</p>
-          <span class="time">~10 minutes</span>
-        </div>
-        <div class="step" data-reveal>
-          <div class="n">2</div>
-          <h3>Add your products</h3>
-          <p>Photos, prices in rands, stock on hand. Add them one at a time or in a batch.</p>
-          <span class="time">Bulk or single</span>
-        </div>
-        <div class="step" data-reveal>
-          <div class="n">3</div>
-          <h3>Share and sell</h3>
-          <p>Send your link, post it, sell. Every order lands in your dashboard, ready to pack.</p>
-          <span class="time">Orders in one place</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SHOWCASE -->
-  <section class="section" id="showcase">
-    <div class="wrap">
-      <div class="sec-head" data-reveal>
-        <span class="kicker">Built for local trade</span>
-        <h2 class="stitch-h">Made for the way South Africa sells</h2>
-        <p>From township spaza to Sandton boutique — MiraiStitch suits the brands this country actually makes.</p>
-      </div>
-      <div class="cats">
-        <article class="cat c1" data-reveal data-tiltcard><div class="bg"></div><span class="cat-emoji">👗</span><h3>Fashion & apparel</h3><p>Labels, resellers, thrift</p></article>
-        <article class="cat c2" data-reveal data-tiltcard><div class="bg"></div><span class="cat-emoji">💠</span><h3>Beadwork & craft</h3><p>Handmade, one-of-a-kind</p></article>
-        <article class="cat c3" data-reveal data-tiltcard><div class="bg"></div><span class="cat-emoji">🌶️</span><h3>Food & spice</h3><p>Biltong, rubs, preserves</p></article>
-        <article class="cat c4" data-reveal data-tiltcard><div class="bg"></div><span class="cat-emoji">🕯️</span><h3>Home & décor</h3><p>Candles, ceramics, textiles</p></article>
-      </div>
-    </div>
-  </section>
-
-  <!-- QUOTE -->
-  <section class="section" style="padding-block:40px 96px">
-    <div class="wrap">
-      <hr class="seam" style="margin-bottom:56px">
-      <div class="quote" data-reveal>
-        <blockquote>"It finally feels like a shop that matches the things I make — and my customers pay the way they already know how."</blockquote>
-        <p class="who">— A pilot store owner, Durban <span style="color:var(--stone-400)">(placeholder — swap for a real quote at launch)</span></p>
+        <div class="step" data-reveal><div class="n">1</div><h3>Describe or design</h3><p>Prompt the AI builder, or drag blocks yourself. Pick a look, add your logo.</p></div>
+        <div class="step" data-reveal><div class="n">2</div><h3>Add your products</h3><p>Photos, prices in rands, stock. One at a time or in a batch.</p></div>
+        <div class="step" data-reveal><div class="n">3</div><h3>Share and sell</h3><p>Send your link, post it, sell. Orders land in your dashboard, ready to pack.</p></div>
       </div>
     </div>
   </section>
 
   <!-- PRICING -->
-  <section class="section" id="pricing" style="background:#fffdf9;border-top:1px solid var(--line)">
+  <section class="pricing" id="pricing">
     <div class="wrap">
-      <div class="pricing-top">
-        <div class="sec-head" data-reveal style="margin-bottom:0">
-          <span class="kicker">Simple, rand pricing</span>
-          <h2>Start free. Grow when you do.</h2>
-        </div>
-        <div class="toggle" data-reveal role="group" aria-label="Billing period">
-          <button id="billMonthly" class="on" aria-pressed="true">Monthly</button>
-          <button id="billAnnual" aria-pressed="false">Annual<span class="save">−2 months</span></button>
-        </div>
+      <div class="sec-head">
+        <span class="eyebrow" data-reveal><span class="seam"></span>Simple, rand pricing</span>
+        <h2 data-rt>Start free. Grow when you do.</h2>
+        <span class="ex-label">Example pricing — confirmed at launch</span>
       </div>
       <div class="plans">
-        <article class="plan" data-reveal>
-          <div class="pl-name">Starter</div>
-          <div class="pl-price"><b>R0</b><span>/month</span></div>
-          <div class="pl-fee">2% per sale</div>
+        <div class="plan" data-reveal>
+          <div class="pn">Starter</div>
+          <div class="pp"><b>R0</b><span>/month</span></div>
+          <div class="pf">No platform fee on sales</div>
           <ul>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> One storefront</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Local payments & couriers</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Local payments &amp; couriers</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Up to 25 products</li>
           </ul>
           <a href="app.html" class="btn btn-ghost">Start free</a>
-        </article>
-        <article class="plan feat" data-reveal>
-          <div class="pl-name">Growth <span class="pl-badge">Popular</span></div>
-          <div class="pl-price"><b data-price data-monthly="R290" data-annual="R242">R290</b><span data-per>/month</span></div>
-          <div class="pl-fee">1% per sale</div>
+        </div>
+        <div class="plan feat" data-reveal>
+          <div class="pn">Growth</div>
+          <div class="pp"><b>R290</b><span>/month</span></div>
+          <div class="pf">No platform fee on sales</div>
           <ul>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Everything in Starter</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Unlimited products</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> WhatsApp selling & discounts</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Your own domain</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> WhatsApp selling &amp; your own domain</li>
           </ul>
           <a href="app.html" class="btn btn-gold mag">Choose Growth</a>
-        </article>
-        <article class="plan" data-reveal>
-          <div class="pl-name">Pro</div>
-          <div class="pl-price"><b data-price data-monthly="R690" data-annual="R575">R690</b><span data-per>/month</span></div>
-          <div class="pl-fee">0% platform fee</div>
+        </div>
+        <div class="plan" data-reveal>
+          <div class="pn">Pro</div>
+          <div class="pp"><b>R690</b><span>/month</span></div>
+          <div class="pf">Priority local support</div>
           <ul>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Everything in Growth</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> No per-sale platform fee</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Priority local support</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Advanced analytics</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Multiple team members</li>
           </ul>
           <a href="app.html" class="btn btn-ghost">Choose Pro</a>
-        </article>
+        </div>
       </div>
-      <p class="price-note">Launch pricing — indicative while we pilot. Payment-provider fees (e.g. PayFast) are separate.</p>
     </div>
   </section>
 
-  <!-- CTA BAND -->
-  <section class="section" style="padding-top:0">
-    <div class="wrap">
-      <div class="cta-band" data-reveal>
-        <div class="cta-glow" aria-hidden="true"></div>
-        <h2>Your brand deserves a shop as good as your work.</h2>
-        <p>Open your MiraiStitch store today and start selling to South Africa by the weekend.</p>
-        <div class="hero-cta">
-          <a href="app.html" class="btn btn-gold btn-lg mag">Start your store</a>
-          <a href="#features" class="btn btn-ghost-light btn-lg">See everything it does</a>
-        </div>
-        <p class="hero-note">Free to start — no card needed.</p>
+  <!-- CTA -->
+  <section class="cta">
+    <div class="wrap cta-inner">
+      <h2 data-rt>Your brand deserves a shop this good.</h2>
+      <p data-reveal>Open your MiraiStitch store today and start selling to South Africa by the weekend.</p>
+      <div class="hero-cta" data-reveal>
+        <a href="app.html" class="btn btn-gold mag">Start your store</a>
+        <a href="store.html" class="btn btn-ghost">See a live store</a>
       </div>
     </div>
   </section>
 </main>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="wrap">
-    <div class="foot-grid">
-      <div class="foot-brand">
-        <a class="brand" href="#top">
-          <svg class="mk" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1c1917"/><path d="M7 20 L13 11 L16 16 L19 11 L25 20" fill="none" stroke="#d9a94e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 2.4"/></svg>
-          MiraiStitch
-        </a>
-        <p>Commerce for South African makers, fashion labels and craft brands. Built in Durban by Mirai Stack.</p>
-      </div>
-      <div class="foot-col">
-        <h4>Product</h4>
-        <a href="#features">Features</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#showcase">Showcase</a>
-        <a href="app.html">Admin demo</a>
-      </div>
-      <div class="foot-col">
-        <h4>Company</h4>
-        <a href="#">About</a>
-        <a href="#">Makers' stories</a>
-        <a href="#">Careers</a>
-        <a href="#">Contact</a>
-      </div>
-      <div class="foot-col">
-        <h4>Support</h4>
-        <a href="#">Help centre</a>
-        <a href="#">Setup guide</a>
-        <a href="#">Status</a>
-        <a href="#">POPIA & privacy</a>
-      </div>
-    </div>
-    <div class="foot-bottom">
-      <span>© <span id="yr"></span> MiraiStitch · Durban, South Africa</span>
-      <span>Prices in ZAR · incl. 15% VAT where applicable</span>
-    </div>
+<footer>
+  <div class="wrap foot-in">
+    <span>© <span id="yr"></span> MiraiStitch · Durban, South Africa · built by Mirai Stack</span>
+    <span>Prices in ZAR · incl. 15% VAT where applicable</span>
   </div>
 </footer>
 
-<script src="app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  "use strict";
+  var $=function(s,r){return (r||document).querySelector(s)};
+  var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+  var RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  var G=window.gsap;
+  var yr=$("#yr"); if(yr) yr.textContent=new Date().getFullYear();
+
+  // ---------- ambient 3D hero (Three.js; reduced-motion + no-WebGL safe) ----------
+  if (!RM && window.THREE) initHero3D();
+  function initHero3D() {
+    var canvas = $("#hero3d"); var host = $(".hero");
+    if (!canvas || !host) return;
+    var THREE = window.THREE, renderer;
+    try { renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true }); }
+    catch (e) { return; } // no WebGL → leave the hero clean
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(45, host.clientWidth / host.clientHeight, 0.1, 100);
+    camera.position.z = 16;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(host.clientWidth, host.clientHeight, false);
+    // a looping "thread" — gold wireframe torus-knot (on-brand for Stitch)
+    var mesh = new THREE.Mesh(
+      new THREE.TorusKnotGeometry(4.6, 0.3, 170, 14, 2, 3),
+      new THREE.MeshBasicMaterial({ color: 0xa16207, wireframe: true, transparent: true, opacity: 0.85 })
+    );
+    mesh.position.x = host.clientWidth > 860 ? 4.6 : 0;
+    scene.add(mesh);
+
+    var tx = 0, ty = 0, cx = 0, cy = 0, running = true;
+    addEventListener("pointermove", function (e) {
+      ty = (e.clientX / innerWidth - 0.5) * 0.7;
+      tx = (e.clientY / innerHeight - 0.5) * 0.7;
+    }, { passive: true });
+
+    function frame() {
+      if (!running) return;
+      mesh.rotation.y += 0.003;
+      cx += (tx - cx) * 0.05; cy += (ty - cy) * 0.05;
+      mesh.rotation.x = 0.4 + cx; mesh.rotation.z = cy;
+      renderer.render(scene, camera);
+      requestAnimationFrame(frame);
+    }
+    // pause the loop when the hero scrolls out of view (performance)
+    new IntersectionObserver(function (es) {
+      var vis = es[0].isIntersecting;
+      if (vis && !running) { running = true; frame(); } else { running = vis; }
+    }, { threshold: 0 }).observe(host);
+
+    var rt;
+    addEventListener("resize", function () {
+      clearTimeout(rt);
+      rt = setTimeout(function () {
+        camera.aspect = host.clientWidth / host.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(host.clientWidth, host.clientHeight, false);
+        mesh.position.x = host.clientWidth > 860 ? 4.6 : 0;
+      }, 200);
+    });
+    frame();
+  }
+
+  // nav solid on scroll
+  var nav=$("#nav");
+  addEventListener("scroll",function(){nav.classList.toggle("solid",scrollY>10)},{passive:true});
+  var mb=$("#menuBtn"); if(mb) mb.addEventListener("click",function(){location.href="app.html"});
+
+  // marquee content (readable with JS off is fine — decorative)
+  var mq=$("#mqTrack");
+  if(mq){var words=["Fashion","Beadwork","Food &amp; spice","Décor","Ceramics","Thrift","Candles","Craft"];
+    var row=words.map(function(w){return "<span>"+w+"</span>"}).join("");
+    mq.innerHTML=row+row;}
+
+  // word-mask split (keeps text readable if JS fails: only runs when JS runs)
+  function splitWords(el){
+    var accent=el.getAttribute("data-accent");
+    var words=el.textContent.trim().split(/\s+/);
+    el.textContent="";
+    var inks=[];
+    words.forEach(function(w,i){
+      var sleeve=document.createElement("span"); sleeve.className="rt-word";
+      var ink=document.createElement("span"); ink.className="rt-ink";
+      if(accent && w.replace(/[^A-Za-z]/g,"").toLowerCase()===accent.toLowerCase()) ink.classList.add("accent");
+      ink.textContent=w;
+      sleeve.appendChild(ink);
+      el.appendChild(sleeve);
+      if(i<words.length-1) el.appendChild(document.createTextNode(" "));
+      inks.push(ink);
+    });
+    return inks;
+  }
+
+  // ---------- reduced motion / no GSAP: show everything, stop ----------
+  if(RM || !G){
+    if($("#demoTxt")) $("#demoTxt").textContent="beaded jewellery, earthy, premium";
+    var c=$("#demoCaret"); if(c) c.style.display="none";
+    var cnt=$("[data-count]"); if(cnt) cnt.textContent="0";
+    return;
+  }
+
+  G.registerPlugin(window.ScrollTrigger);
+
+  // ---------- smooth scroll (the signature, paired with kinetic type) ----------
+  if(window.Lenis){
+    var lenis=new Lenis({duration:1.1, easing:function(t){return 1-Math.pow(1-t,3)}});
+    lenis.on("scroll", ScrollTrigger.update);
+    G.ticker.add(function(t){ lenis.raf(t*1000); });
+    G.ticker.lagSmoothing(0);
+  }
+
+  // ---------- hero: kinetic headline (signature) + staggered support ----------
+  var heroInks=splitWords($(".hero h1"));
+  G.set(heroInks,{yPercent:110});
+  var tl=G.timeline({defaults:{ease:"power3.out"}});
+  tl.to(heroInks,{yPercent:0,duration:.9,stagger:.045},0.1)
+    .from(".hero .eyebrow",{y:16,opacity:0,duration:.6},0.1)
+    .from(".seam-draw",{scaleX:0,transformOrigin:"left center",duration:.8},0.5)
+    .from(".hero .sub",{y:18,opacity:0,duration:.7},0.55)
+    .from(".hero-cta",{y:16,opacity:0,duration:.6},0.7)
+    .from(".hero-foot",{y:12,opacity:0,duration:.5},0.8)
+    .from(".showpiece",{y:40,opacity:0,duration:1,ease:"expo.out"},0.3);
+
+  // hero visual drifts slower than scroll (depth, one continuous input)
+  G.to(".hero-visual",{yPercent:-14,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:true}});
+
+  // ---------- marquee drift, tied to scroll direction (continuous input) ----------
+  if(mq){
+    var mqTween=G.to(mq,{xPercent:-50,repeat:-1,duration:26,ease:"none"});
+    ScrollTrigger.create({trigger:".strip",start:"top bottom",end:"bottom top",
+      onUpdate:function(self){ mqTween.timeScale(self.direction===1?1:-1); }});
+  }
+
+  // ---------- section headlines: kinetic reveal on scroll (different beat) ----------
+  $$("[data-rt]").forEach(function(el){
+    if(el===$(".hero h1")) return;
+    var inks=splitWords(el);
+    G.set(inks,{yPercent:110});
+    ScrollTrigger.create({trigger:el,start:"top 85%",once:true,
+      onEnter:function(){ G.to(inks,{yPercent:0,duration:.8,stagger:.04,ease:"power3.out"}); }});
+  });
+
+  // ---------- quiet fades for supporting content (one calm beat per section) ----------
+  $$("[data-reveal]").forEach(function(el){
+    G.from(el,{y:22,opacity:0,duration:.7,ease:"power3.out",
+      scrollTrigger:{trigger:el,start:"top 88%",once:true}});
+  });
+
+  // ---------- the "0%" counts down to land on zero (the point of the section) ----------
+  var countEl=$("[data-count]");
+  if(countEl){
+    var o={v:15};
+    ScrollTrigger.create({trigger:".wedge",start:"top 70%",once:true,onEnter:function(){
+      G.to(o,{v:0,duration:1.2,ease:"power2.out",onUpdate:function(){countEl.textContent=Math.round(o.v)}});
+    }});
+  }
+
+  // ---------- AI builder micro-demo: type a prompt, then blocks rise (one orchestrated moment) ----------
+  var demo=$("[data-demo]");
+  if(demo){
+    var txtEl=$("#demoTxt"), caret=$("#demoCaret"), blocks=$$("[data-db]",demo);
+    G.set(blocks,{opacity:0,y:16});
+    var phrase="beaded jewellery, earthy, premium";
+    ScrollTrigger.create({trigger:demo,start:"top 75%",once:true,onEnter:function(){
+      var i=0, typer=setInterval(function(){
+        txtEl.textContent=phrase.slice(0,i++);
+        if(i>phrase.length){ clearInterval(typer); caret.style.opacity="0";
+          G.to(blocks,{opacity:1,y:0,duration:.6,stagger:.14,ease:"power3.out"});
+        }
+      },42);
+      // caret blink
+      G.to(caret,{opacity:0,duration:.5,repeat:-1,yoyo:true,ease:"power1.inOut"});
+    }});
+  }
+
+  // ---------- tilt helper (depth on pointer; never on touch) ----------
+  function tilt(el, strength, inner){
+    if(matchMedia("(pointer:coarse)").matches) return;
+    var t=inner||el;
+    var rx=G.quickTo(t,"rotationX",{duration:.5,ease:"power3.out"});
+    var ry=G.quickTo(t,"rotationY",{duration:.5,ease:"power3.out"});
+    el.addEventListener("pointermove",function(e){var r=el.getBoundingClientRect();
+      ry((e.clientX-r.left-r.width/2)/r.width*strength);
+      rx(-(e.clientY-r.top-r.height/2)/r.height*strength);});
+    el.addEventListener("pointerleave",function(){rx(0);ry(0);});
+  }
+
+  // ---------- hero depth: 3D tilt + floating chips (idle drift) ----------
+  var hv=$(".hero-visual"), hvi=$(".hv-inner");
+  if(hvi) tilt(hv,10,hvi);
+  $$(".fchip").forEach(function(c,i){
+    tl.from(c,{opacity:0,scale:.82,duration:.5,ease:"power3.out"}, 1.0+i*.12);
+    G.to(c,{y:"+=8",duration:2.4+i*.5,ease:"sine.inOut",yoyo:true,repeat:-1,delay:1.5});
+  });
+
+  // ---------- scroll-progress "stitch" bar ----------
+  var bar=$("#scrollbar");
+  if(bar) G.to(bar,{scaleX:1,ease:"none",
+    scrollTrigger:{start:0,end:function(){return document.body.scrollHeight-innerHeight},scrub:.3,invalidateOnRefresh:true}});
+
+  // ---------- pinned horizontal gallery (desktop) ----------
+  var galTrack=$("#galTrack");
+  if(galTrack && innerWidth>860){
+    var dist=galTrack.scrollWidth - innerWidth + 52;
+    if(dist>0) G.to(galTrack,{x:-dist,ease:"none",
+      scrollTrigger:{trigger:".gal-pin",start:"top top",end:"+="+dist,scrub:.5,pin:true,anticipatePin:1,invalidateOnRefresh:true}});
+    G.from(".gal-card",{opacity:0,y:30,duration:.6,stagger:.08,ease:"power3.out",
+      scrollTrigger:{trigger:".gal-pin",start:"top 80%",once:true}});
+  }
+
+  // ---------- pricing card tilt ----------
+  $$(".plan").forEach(function(p){ tilt(p,6); });
+
+  // ---------- magnetic buttons (micro-interaction; never focus) ----------
+  if(!matchMedia("(pointer:coarse)").matches){
+    $$(".mag").forEach(function(btn){
+      var mx=G.quickTo(btn,"x",{duration:.4,ease:"power3.out"});
+      var my=G.quickTo(btn,"y",{duration:.4,ease:"power3.out"});
+      btn.addEventListener("pointermove",function(e){var r=btn.getBoundingClientRect();
+        mx((e.clientX-r.left-r.width/2)*.3); my((e.clientY-r.top-r.height/2)*.5);});
+      btn.addEventListener("pointerleave",function(){mx(0);my(0);});
+    });
+  }
+})();
+</script>
 </body>
 </html>
