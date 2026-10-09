@@ -254,6 +254,29 @@
   .seam-rule{height:2px;width:min(1120px,calc(100% - 48px));margin:0 auto;
     background-image:linear-gradient(90deg,var(--gold) 0 9px,transparent 9px 16px);background-size:16px 2px;background-repeat:repeat-x;opacity:.5}
   .seam-rule.on-ink{background-image:linear-gradient(90deg,var(--gold-light) 0 9px,transparent 9px 16px);opacity:.75}
+
+  /* ---- the needle cursor ----
+     MiraiStitch is about stitching a store together, so the pointer is the needle that
+     does it. Three states: ink on paper, gold when something is actionable (the thread
+     is "pulled through"), pale on the dark section where ink would vanish.
+     Fine-pointer only — touch devices have no cursor, and forcing one there is noise.
+     Text inputs keep the I-beam: never trade an editing affordance for a brand flourish. */
+  @media (hover:hover) and (pointer:fine){
+    body{cursor:url("data:image/svg+xml,%3Csvg xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27 width%3D%2730%27 height%3D%2730%27 viewBox%3D%270 0 30 30%27%3E%3Cpath d%3D%27M23 23.6c2.6 1.9 3.2 4 1.8 6.2%27 fill%3D%27none%27 stroke%3D%27%23a16207%27 stroke-width%3D%273%27 stroke-linecap%3D%27round%27%2F%3E%3Cpath d%3D%27M1.8 1.8 L20.4 15.6 L15.6 20.4 Z%27 fill%3D%27%231a1714%27 stroke%3D%27%23fffdf9%27 stroke-width%3D%271.3%27 stroke-linejoin%3D%27round%27%2F%3E%3Ccircle cx%3D%2721.6%27 cy%3D%2721.6%27 r%3D%273.6%27 fill%3D%27%23fffdf9%27 stroke%3D%27%231a1714%27 stroke-width%3D%272.4%27%2F%3E%3C%2Fsvg%3E") 2 2, auto}
+    a,button,.btn,summary,[role="button"],label,.gal-card,.sp-prod{cursor:url("data:image/svg+xml,%3Csvg xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27 width%3D%2730%27 height%3D%2730%27 viewBox%3D%270 0 30 30%27%3E%3Cpath d%3D%27M23 23.6c2.6 1.9 3.2 4 1.8 6.2%27 fill%3D%27none%27 stroke%3D%27%23a16207%27 stroke-width%3D%273%27 stroke-linecap%3D%27round%27%2F%3E%3Cpath d%3D%27M1.8 1.8 L20.4 15.6 L15.6 20.4 Z%27 fill%3D%27%237a4e0a%27 stroke%3D%27%23fffdf9%27 stroke-width%3D%271.3%27 stroke-linejoin%3D%27round%27%2F%3E%3Ccircle cx%3D%2721.6%27 cy%3D%2721.6%27 r%3D%273.6%27 fill%3D%27%23fffdf9%27 stroke%3D%27%237a4e0a%27 stroke-width%3D%272.4%27%2F%3E%3C%2Fsvg%3E") 2 2, pointer}
+    .wedge,.wedge a,.wedge button{cursor:url("data:image/svg+xml,%3Csvg xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27 width%3D%2730%27 height%3D%2730%27 viewBox%3D%270 0 30 30%27%3E%3Cpath d%3D%27M23 23.6c2.6 1.9 3.2 4 1.8 6.2%27 fill%3D%27none%27 stroke%3D%27%23d9a94e%27 stroke-width%3D%273%27 stroke-linecap%3D%27round%27%2F%3E%3Cpath d%3D%27M1.8 1.8 L20.4 15.6 L15.6 20.4 Z%27 fill%3D%27%23fffdf9%27 stroke%3D%27%231a1714%27 stroke-width%3D%271.3%27 stroke-linejoin%3D%27round%27%2F%3E%3Ccircle cx%3D%2721.6%27 cy%3D%2721.6%27 r%3D%273.6%27 fill%3D%27%231a1714%27 stroke%3D%27%23fffdf9%27 stroke-width%3D%272.4%27%2F%3E%3C%2Fsvg%3E") 2 2, auto}
+    input,textarea,select,[contenteditable]{cursor:text}
+  }
+
+  /* The needle that makes the stitch. It rides the leading edge of every seam as the
+     seam is revealed, so the thread is visibly being sewn rather than just appearing.
+     Hidden by default: JS reveals it, so reduced-motion and no-JS never see a stray
+     needle parked over a finished seam. */
+  .needle{position:absolute;left:0;top:0;width:22px;height:22px;z-index:4;pointer-events:none;
+    opacity:0;will-change:transform}
+  .needle svg{display:block;width:100%;height:100%;overflow:visible}
+  .needle.fixed{position:fixed}
+  .seam-host{position:relative}
   .hero-visual{perspective:1200px}
   .hv-inner{position:relative;transform-style:preserve-3d;will-change:transform}
   .fchip{position:absolute;z-index:3;background:rgba(255,253,249,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
@@ -740,6 +763,46 @@
       ease: "steps(" + stitchCount(el, pitch) + ")"};
   }
 
+  // ---------- the needle that sews the seam ----------
+  // A seam appearing is a wipe; a seam being *sewn* needs the thing doing the sewing.
+  // This drops a needle at the leading edge of the reveal and walks it across, bobbing
+  // in and out on the same step count as the stitches, so each dash lands as the needle
+  // dips. Built in JS, so no-JS and reduced-motion never see it.
+  var NEEDLE_SVG =
+    '<svg viewBox="0 0 30 30" aria-hidden="true">'
+  + '<path d="M23 23.6c2.6 1.9 3.2 4 1.8 6.2" fill="none" stroke="#a16207" stroke-width="3" stroke-linecap="round"/>'
+  + '<path d="M1.8 1.8 L20.4 15.6 L15.6 20.4 Z" fill="#1a1714" stroke="#fffdf9" stroke-width="1.3" stroke-linejoin="round"/>'
+  + '<circle cx="21.6" cy="21.6" r="3.6" fill="#fffdf9" stroke="#1a1714" stroke-width="2.4"/></svg>';
+
+  function makeNeedle(host, cls){
+    var n=document.createElement("span");
+    n.className="needle"+(cls?" "+cls:""); n.setAttribute("aria-hidden","true");
+    n.innerHTML=NEEDLE_SVG; host.appendChild(n); return n;
+  }
+
+  // Walk a needle across `el` while `el` is clip-revealed. Returns the needle.
+  function sew(tl, el, pitch, dur, at_){
+    if(!el || !el.parentNode) return null;
+    var host=el.parentNode;
+    if(getComputedStyle(host).position==="static") host.classList.add("seam-host");
+    var n=makeNeedle(host), steps=stitchCount(el,pitch);
+    function geom(){
+      var a=el.getBoundingClientRect(), b=host.getBoundingClientRect();
+      return {x0:a.left-b.left, y:a.top-b.top+a.height/2, w:a.width};
+    }
+    var g=geom();
+    // tip leads the thread: the needle art points up-left, so face it along the seam
+    G.set(n,{x:g.x0-11, y:g.y-11, rotation:135, transformOrigin:"50% 50%"});
+    tl.to(n,{autoAlpha:1,duration:.12},at_)
+      .to(n,{duration:dur,ease:"steps("+steps+")",
+             x:function(){var q=geom();return q.x0+q.w-11;}},at_)
+      // the in-and-out of sewing, one bob per stitch
+      .to(n,{y:g.y-15,duration:dur/(steps*2),ease:"sine.inOut",
+             repeat:steps*2-1,yoyo:true},at_)
+      .to(n,{autoAlpha:0,duration:.22},at_+dur);
+    return n;
+  }
+
   // ---------- smooth scroll (the signature, paired with kinetic type) ----------
   if(window.Lenis){
     var lenis=new Lenis({duration:1.1, easing:function(t){return 1-Math.pow(1-t,3)}});
@@ -761,7 +824,7 @@
     .from(".hero-foot",{y:12,opacity:0,duration:.5},0.8)
     .from(".showpiece",{y:40,opacity:0,duration:1,ease:"expo.out"},0.3);
   // the seam sews itself under the headline, stitch by stitch
-  if(heroSeam) tl.to(heroSeam, stitchVars(heroSeam, 18, .8), 0.5);
+  if(heroSeam){ tl.to(heroSeam, stitchVars(heroSeam, 18, .8), 0.5); sew(tl, heroSeam, 18, .8, 0.5); }
 
   // hero visual drifts slower than scroll (depth, one continuous input)
   G.to(".hero-visual",{yPercent:-14,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:true}});
@@ -839,14 +902,32 @@
   // Smooth (ease:none) rather than stepped — the dash pattern already makes stitches appear
   // discretely as the clip opens, and stepping a scrubbed tween reads as stutter.
   var bar=$("#scrollbar");
-  if(bar) G.to(bar,{clipPath:"inset(0% 0% 0% 0%)",ease:"none",
-    scrollTrigger:{start:0,end:function(){return document.body.scrollHeight-innerHeight},scrub:.3,invalidateOnRefresh:true}});
+  if(bar){
+    var endFn=function(){return document.body.scrollHeight-innerHeight};
+    G.to(bar,{clipPath:SEAM_OPEN,ease:"none",
+      scrollTrigger:{start:0,end:endFn,scrub:.3,invalidateOnRefresh:true}});
+
+    // The needle rides the leading edge of the page thread, so scrolling IS the sewing:
+    // the further you go, the more of the seam you have stitched. Driven off the same
+    // scrubbed progress as the clip, so needle and thread can never disagree.
+    var pn=makeNeedle(document.body,"fixed");
+    G.set(pn,{x:-11,y:-9,rotation:135,transformOrigin:"50% 50%",autoAlpha:0});
+    ScrollTrigger.create({start:0,end:endFn,scrub:.3,invalidateOnRefresh:true,
+      onUpdate:function(self){
+        var p=self.progress;
+        G.set(pn,{x:p*innerWidth-11, autoAlpha:(p>0.004 && p<0.997)?1:0});
+      }});
+  }
 
   // ---------- the thread re-emerges between sections ----------
   $$("[data-seam]").forEach(function(el){
     G.set(el,{clipPath:SEAM_SHUT});
     ScrollTrigger.create({trigger:el,start:"top 92%",once:true,
-      onEnter:function(){ G.to(el, stitchVars(el, 16, 1.1)); }});
+      onEnter:function(){
+        var t=G.timeline();
+        t.to(el, stitchVars(el, 16, 1.1), 0);
+        sew(t, el, 16, 1.1, 0);
+      }});
   });
 
   // ---------- hero journey: browse -> product -> pay -> delivered ----------
