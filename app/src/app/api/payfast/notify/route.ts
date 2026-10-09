@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyItnSignature, validateItnWithPayfast } from "@/lib/payfast";
+import { reportPurchase } from "@/lib/marketing/conversions";
 
 export const runtime = "nodejs";
 
@@ -63,7 +64,7 @@ export async function POST(req: Request) {
 
   const { data: order } = await db
     .from("orders")
-    .select("id,number,email,total_cents,status,store_id")
+    .select("id,number,email,total_cents,status,store_id,customer")
     .eq("id", orderId)
     .single();
   if (!order) return new NextResponse("OK");
@@ -86,6 +87,25 @@ export async function POST(req: Request) {
       if (it.product_id) await db.rpc("decrement_stock", { pid: it.product_id, q: it.qty });
     }
     await sendReceipt(order.email, order.number, order.total_cents);
+
+    // Report the sale server-side. A confirmed payment is the one moment we KNOW
+    // a purchase happened, and browser pixels lose a large share of these.
+    // reportPurchase never throws, so marketing can never make us return non-200
+    // and trigger a PayFast retry.
+    const { data: lines } = await db
+      .from("order_items").select("product_id,title,qty,price_cents").eq("order_id", order.id);
+    await reportPurchase({
+      id: order.id,
+      storeId: order.store_id,
+      number: order.number,
+      email: order.email,
+      phone: (order as { customer?: { phone?: string } }).customer?.phone ?? null,
+      totalCents: order.total_cents,
+      currency: "ZAR",
+      items: (lines ?? []).map((l) => ({
+        id: l.product_id ?? l.title, title: l.title, qty: l.qty, priceCents: l.price_cents,
+      })),
+    });
   } else if (status === "CANCELLED") {
     await db.from("orders").update({ status: "cancelled" }).eq("id", order.id);
   }

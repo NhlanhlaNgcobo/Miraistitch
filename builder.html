@@ -105,7 +105,8 @@
   .pg{display:grid;gap:16px}
   .pg.c2{grid-template-columns:repeat(2,1fr)}.pg.c3{grid-template-columns:repeat(3,1fr)}.pg.c4{grid-template-columns:repeat(4,1fr)}
   .pc{border:1px solid var(--line);border-radius:12px;overflow:hidden}
-  .pc .pci{aspect-ratio:1/1;display:grid;place-items:center;font-size:44px;background:var(--gold-tint)}
+  .pc .pci{aspect-ratio:1/1;display:grid;place-items:center;background:var(--gold-tint);overflow:hidden}
+  .pc .pci img{width:100%;height:100%;object-fit:cover}
   .pc .pcb{padding:11px 13px}
   .pc .pcn{font-weight:600;font-size:.86rem}
   .pc .pcp{color:var(--gold-deep);font-weight:700;font-size:.86rem;margin-top:3px;font-variant-numeric:tabular-nums}
@@ -119,8 +120,8 @@
   .b-collection{padding:40px}
   .cr{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
   .cc{aspect-ratio:3/4;border-radius:12px;display:flex;flex-direction:column;justify-content:flex-end;padding:16px;color:#fff;position:relative;overflow:hidden}
-  .cc .ccb{position:absolute;inset:0;background:linear-gradient(160deg,var(--gold-deep),var(--ink))}
-  .cc span{position:relative;z-index:1;font-size:30px}.cc b{position:relative;z-index:1;font-family:var(--serif);font-weight:600;font-size:1.15rem;margin-top:6px}
+  .cc .ccb{position:absolute;inset:0;background-size:cover;background-position:center}
+  .cc b{position:relative;z-index:1;font-family:var(--serif);font-weight:600;font-size:1.15rem;margin-top:6px}
   .b-quote{padding:56px 40px;text-align:center}
   .b-quote blockquote{font-family:var(--serif);font-size:1.7rem;font-weight:500;line-height:1.3;margin:0 auto;max-width:34ch;color:var(--ink)}
   .b-quote .who{color:var(--stone);margin-top:16px;font-size:.9rem}
@@ -218,14 +219,16 @@
   var uid=function(){return "b"+Math.random().toString(36).slice(2,8)};
   function R(c){return "R"+(c/100).toLocaleString('en-ZA',{minimumFractionDigits:2,maximumFractionDigits:2})}
   function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(m){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]})}
+  var PRODUCT_PHOTOS={"27\" 4K Monitor":"images/products/w/monitor-4k-640.webp","Oak Desk Chair":"images/products/w/oak-desk-chair-640.webp","Wireless Earbuds":"images/products/w/wireless-earbuds-640.webp","Running Shoes":"images/products/w/running-shoes-640.webp","Cotton Towel Set":"images/products/w/cotton-towel-set-640.webp","Cordless Drill 18V":"images/products/w/cordless-drill-18v-640.webp","Modular Sofa":"images/products/w/modular-sofa-640.webp","Contemporary Apparel":"images/products/w/apparel-look-640.webp","Skincare Collection":"images/products/w/skincare-set-640.webp","Grocery Essentials":"images/products/w/grocery-essentials-640.webp","Outdoor Pack":"images/products/w/outdoor-pack-640.webp"};
+  function photo(p){var src=(p&&p.img&&String(p.img).indexOf("images/")===0?p.img:PRODUCT_PHOTOS[p&&p.title])||"images/products/w/monitor-4k-640.webp";return '<img src="'+src+'" alt="'+esc(p&&p.title||'Product')+'">'}
 
   // products from the app's store state, else defaults
   function products(){
     try{var s=JSON.parse(localStorage.getItem(SKEY));if(s&&s.products&&s.products.length)return s.products}catch(e){}
     return [
-      {title:"27\" 4K Monitor",price:429900,img:"🖥️"},{title:"Oak Desk Chair",price:245000,img:"🪑"},
-      {title:"Wireless Earbuds",price:89900,img:"🎧"},{title:"Running Shoes",price:129900,img:"👟"},
-      {title:"Cotton Towel Set",price:54900,img:"🧺"},{title:"Cordless Drill 18V",price:189900,img:"🔧"}
+      {title:"27\" 4K Monitor",price:429900,img:"images/products/w/monitor-4k-640.webp"},{title:"Oak Desk Chair",price:245000,img:"images/products/w/oak-desk-chair-640.webp"},
+      {title:"Wireless Earbuds",price:89900,img:"images/products/w/wireless-earbuds-640.webp"},{title:"Running Shoes",price:129900,img:"images/products/w/running-shoes-640.webp"},
+      {title:"Cotton Towel Set",price:54900,img:"images/products/w/cotton-towel-set-640.webp"},{title:"Cordless Drill 18V",price:189900,img:"images/products/w/cordless-drill-18v-640.webp"}
     ];
   }
 
@@ -257,11 +260,11 @@
     var p=b.props;
     if(b.type==="hero")return '<div class="b-hero" data-align="'+(p.align||"center")+'"><h1>'+esc(p.heading)+'</h1><p>'+esc(p.sub)+'</p><div><span class="b-btn">'+esc(p.btn)+'</span></div></div>';
     if(b.type==="products"){var items=products().slice(0,p.cols==="2"?4:p.cols==="4"?8:6);
-      return '<div class="b-products"><h2>'+esc(p.title)+'</h2><div class="pg c'+(p.cols||"3")+'">'+items.map(function(x){return '<div class="pc"><div class="pci">'+(x.img||"🛍️")+'</div><div class="pcb"><div class="pcn">'+esc(x.title)+'</div><div class="pcp">'+R(x.price)+'</div></div></div>'}).join("")+'</div></div>';}
+      return '<div class="b-products"><h2>'+esc(p.title)+'</h2><div class="pg c'+(p.cols||"3")+'">'+items.map(function(x){return '<div class="pc"><div class="pci">'+photo(x)+'</div><div class="pcb"><div class="pcn">'+esc(x.title)+'</div><div class="pcp">'+R(x.price)+'</div></div></div>'}).join("")+'</div></div>';}
     if(b.type==="richtext")return '<div class="b-rich"><h2>'+esc(p.heading)+'</h2><p>'+esc(p.body)+'</p></div>';
     if(b.type==="banner")return '<div class="b-banner"><div class="be">'+(p.emoji||"🎁")+'</div><div><h3>'+esc(p.heading)+'</h3><p>'+esc(p.sub)+'</p></div><span class="b-btn">'+esc(p.btn)+'</span></div>';
-    if(b.type==="collection"){var cats=[["🖥️","Electronics"],["🪑","Furniture"],["👟","Fashion"],["🏠","Home"]];
-      return '<div class="b-collection"><h2>'+esc(p.title)+'</h2><div class="cr">'+cats.map(function(c){return '<div class="cc"><div class="ccb"></div><span>'+c[0]+'</span><b>'+c[1]+'</b></div>'}).join("")+'</div></div>';}
+    if(b.type==="collection"){var cats=[["Electronics","27\" 4K Monitor"],["Furniture","Modular Sofa"],["Fashion & apparel","Contemporary Apparel"],["Beauty & wellness","Skincare Collection"],["Groceries","Grocery Essentials"],["Sport & outdoor","Outdoor Pack"],["Home textiles","Cotton Towel Set"],["Tools & hardware","Cordless Drill 18V"]];
+      return '<div class="b-collection"><h2>'+esc(p.title)+'</h2><div class="cr">'+cats.map(function(c){return '<div class="cc"><div class="ccb" style="background-image:linear-gradient(0deg,rgba(26,23,20,.75),rgba(26,23,20,.05)),url('+PRODUCT_PHOTOS[c[1]]+')"></div><b>'+c[0]+'</b></div>'}).join("")+'</div></div>';}
     if(b.type==="testimonial")return '<div class="b-quote"><blockquote>"'+esc(p.quote)+'"</blockquote><div class="who">— '+esc(p.author)+'</div></div>';
     if(b.type==="newsletter")return '<div class="b-news"><h3>'+esc(p.heading)+'</h3><div class="nf"><input placeholder="you@example.co.za"><span class="b-btn">'+esc(p.btn)+'</span></div></div>';
     if(b.type==="spacer")return '<div class="b-spacer" style="height:'+(p.h||48)+'px"></div>';

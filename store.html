@@ -264,19 +264,19 @@
   function R(c){return "R"+(c/100).toLocaleString('en-ZA',{minimumFractionDigits:2,maximumFractionDigits:2})}
   function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(m){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]})}
   function svg(p){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>'}
-  var PRODUCT_PHOTOS={"27\" 4K Monitor":"images/products/monitor-4k.png","Oak Desk Chair":"images/products/oak-desk-chair.png","Wireless Earbuds":"images/products/wireless-earbuds.png","Running Shoes":"images/products/running-shoes.png","Cotton Towel Set":"images/products/cotton-towel-set.png","Cordless Drill 18V":"images/products/cordless-drill-18v.png","Modular Sofa":"images/products/modular-sofa.png","Contemporary Apparel":"images/products/apparel-look.png","Skincare Collection":"images/products/skincare-set.png","Grocery Essentials":"images/products/grocery-essentials.png","Outdoor Pack":"images/products/outdoor-pack.png"};
-  function photo(p,cls){var src=(p&&p.img&&String(p.img).indexOf("images/")===0?p.img:PRODUCT_PHOTOS[p&&p.title])||"images/products/monitor-4k.png";return '<img class="'+(cls||'')+'" src="'+src+'" alt="'+esc(p&&p.title||'Product')+'">'}
+  var PRODUCT_PHOTOS={"27\" 4K Monitor":"images/products/w/monitor-4k-640.webp","Oak Desk Chair":"images/products/w/oak-desk-chair-640.webp","Wireless Earbuds":"images/products/w/wireless-earbuds-640.webp","Running Shoes":"images/products/w/running-shoes-640.webp","Cotton Towel Set":"images/products/w/cotton-towel-set-640.webp","Cordless Drill 18V":"images/products/w/cordless-drill-18v-640.webp","Modular Sofa":"images/products/w/modular-sofa-640.webp","Contemporary Apparel":"images/products/w/apparel-look-640.webp","Skincare Collection":"images/products/w/skincare-set-640.webp","Grocery Essentials":"images/products/w/grocery-essentials-640.webp","Outdoor Pack":"images/products/w/outdoor-pack-640.webp"};
+  function photo(p,cls){var src=(p&&p.img&&String(p.img).indexOf("images/")===0?p.img:PRODUCT_PHOTOS[p&&p.title])||"images/products/w/monitor-4k-640.webp";return '<img class="'+(cls||'')+'" src="'+src+'" alt="'+esc(p&&p.title||'Product')+'">'}
 
   // ---- shared state (seed if admin never opened) ----
   var DEFAULT_STATE={
     store:{name:"Northgate Trading",tagline:"Tech, home & everything between"},nextOrder:1002,setup:{},
     products:[
-      {id:"p1",title:"27\" 4K Monitor",desc:"IPS, 60Hz, HDMI",price:429900,stock:18,img:"images/products/monitor-4k.png",active:true},
-      {id:"p2",title:"Oak Desk Chair",desc:"Ergonomic, lumbar support",price:245000,stock:12,img:"images/products/oak-desk-chair.png",active:true},
-      {id:"p3",title:"Wireless Earbuds",desc:"ANC, 30h battery",price:89900,stock:64,img:"images/products/wireless-earbuds.png",active:true},
-      {id:"p4",title:"Running Shoes",desc:"Road, sizes 6-12",price:129900,stock:40,img:"images/products/running-shoes.png",active:true},
-      {id:"p5",title:"Cotton Towel Set",desc:"4-piece, 550gsm",price:54900,stock:85,img:"images/products/cotton-towel-set.png",active:true},
-      {id:"p6",title:"Cordless Drill 18V",desc:"2 batteries, case",price:189900,stock:9,img:"images/products/cordless-drill-18v.png",active:true}
+      {id:"p1",title:"27\" 4K Monitor",desc:"IPS, 60Hz, HDMI",price:429900,stock:18,img:"images/products/w/monitor-4k-640.webp",active:true},
+      {id:"p2",title:"Oak Desk Chair",desc:"Ergonomic, lumbar support",price:245000,stock:12,img:"images/products/w/oak-desk-chair-640.webp",active:true},
+      {id:"p3",title:"Wireless Earbuds",desc:"ANC, 30h battery",price:89900,stock:64,img:"images/products/w/wireless-earbuds-640.webp",active:true},
+      {id:"p4",title:"Running Shoes",desc:"Road, sizes 6-12",price:129900,stock:40,img:"images/products/w/running-shoes-640.webp",active:true},
+      {id:"p5",title:"Cotton Towel Set",desc:"4-piece, 550gsm",price:54900,stock:85,img:"images/products/w/cotton-towel-set-640.webp",active:true},
+      {id:"p6",title:"Cordless Drill 18V",desc:"2 batteries, case",price:189900,stock:9,img:"images/products/w/cordless-drill-18v-640.webp",active:true}
     ],orders:[]
   };
   var DEFAULT_LAYOUT=[

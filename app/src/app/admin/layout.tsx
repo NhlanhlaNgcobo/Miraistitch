@@ -73,6 +73,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
           <div className="ad-navlabel">Sales channel</div>
           <NavLink href="/admin/design">Design</NavLink>
+          <NavLink href="/admin/marketing">Marketing</NavLink>
 
           <div className="ad-navlabel">Account</div>
           <NavLink href="/admin/credits" badge={credits} badgeTone="quiet">Credits</NavLink>
