@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { guard, isFail, startJob, finishJob, failJob } from "@/lib/ai/guard";
 import { admin } from "@/lib/supabase/admin";
 import { toWhiteBackground, imageProviderConfigured, ImageError } from "@/lib/ai/imageProvider";
+import { ENHANCE_COST as COST } from "@/lib/credits";
 
 export const runtime = "nodejs";
 export const maxDuration = 90;
@@ -23,7 +24,6 @@ export const maxDuration = 90;
  * disputed charge can always be reconstructed.
  */
 
-const COST = 1;
 const BUCKET = "product-media";
 const MAX_BYTES = 8 * 1024 * 1024;
 const OK_TYPES = ["image/jpeg", "image/png", "image/webp"];

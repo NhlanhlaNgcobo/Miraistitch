@@ -15,11 +15,10 @@ const rand = (c: number) => "R" + (c / 100).toLocaleString("en-ZA", { minimumFra
  * one tenant's catalogue — there is no store_id filter to forget.
  */
 export default async function Products({
-  searchParams,
+  searchParams: sp,
 }: {
-  searchParams: Promise<{ new?: string; edit?: string }>;
+  searchParams: { new?: string; edit?: string };
 }) {
-  const sp = await searchParams;
   const db = createClient();
   const {
     data: { user },

@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { createClient } from "@/lib/supabase/server";
 import { admin } from "@/lib/supabase/admin";
 import { buildCheckoutFields, PAYFAST_PROCESS_URL } from "@/lib/payfast";
+import { PACKS, isPack, type PackId } from "@/lib/credits";
 
 export const runtime = "nodejs";
 
@@ -17,13 +18,6 @@ export const runtime = "nodejs";
  * the payment is verified, which is the only place that can be trusted.
  */
 
-export const PACKS = {
-  starter: { credits: 25, cents: 9900, label: "25 product shots" },
-  studio: { credits: 100, cents: 34900, label: "100 product shots" },
-  scale: { credits: 500, cents: 149900, label: "500 product shots" },
-} as const;
-
-export type PackId = keyof typeof PACKS;
 
 export async function POST(req: Request) {
   let body: { store_id?: string; pack?: string } = {};
@@ -33,9 +27,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "invalid request" }, { status: 400 });
   }
 
-  const packId = String(body.pack ?? "") as PackId;
+  const raw = String(body.pack ?? "");
+  if (!isPack(raw)) return NextResponse.json({ error: "unknown credit pack" }, { status: 400 });
+  const packId: PackId = raw;
   const pack = PACKS[packId];
-  if (!pack) return NextResponse.json({ error: "unknown credit pack" }, { status: 400 });
 
   const supabase = createClient();
   const {

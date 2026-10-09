@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { PACKS } from "@/app/api/credits/checkout/route";
+import { PACKS } from "@/lib/credits";
 import Buy from "./buy";
 import type { Store } from "@/types";
 
