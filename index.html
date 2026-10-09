@@ -84,8 +84,11 @@
   @media(max-width:860px){.nav-links,.nav-cta .si{display:none}.menu-btn{display:inline-flex}}
 
   /* ---------------- HERO ---------------- */
-  .hero{padding:150px 0 70px}
-  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
+  .hero{padding:150px 0 70px;overflow:visible}
+  /* The journey is the proof, so it gets the room: the visual column is wider than the
+     copy now, and allowed to break the grid gutter and the right edge of the page.
+     overflow-x is already hidden on <body>, so the bleed never creates a scrollbar. */
+  .hero-grid{display:grid;grid-template-columns:1fr 1.12fr;gap:40px;align-items:center}
   .hero h1{font-size:clamp(2.9rem,6.4vw,5.4rem);font-weight:600}
   .hero .sub{color:var(--stone);font-size:1.18rem;max-width:46ch;margin:26px 0 0}
   .seam-draw{display:block;width:min(360px,80%);height:8px;margin:20px 0 0}
@@ -107,8 +110,9 @@
      min-height so swapping stages never shifts layout (CLS stays 0). Stage 1 is
      visible by default, so with JS off or reduced motion the hero is a complete,
      readable storefront rather than a blank box. */
-  .sp-stage{position:relative;padding:26px;min-height:360px}
-  .jst{position:absolute;inset:26px;opacity:0;visibility:hidden}
+  .sp-stage{position:relative;padding:30px;min-height:430px}
+  .jst{position:absolute;inset:30px;opacity:0;visibility:hidden}
+  @media(max-width:860px){.sp-stage{padding:22px;min-height:360px}.jst{inset:22px}}
   .jst[data-st="1"]{opacity:1;visibility:visible}
   .jcursor{position:absolute;left:0;top:0;width:15px;height:15px;border-radius:50%;
     background:var(--ink);border:2px solid var(--paper-2);box-shadow:0 3px 10px rgba(26,23,20,.45);
@@ -283,8 +287,26 @@
   .needle svg{display:block;width:100%;height:100%;overflow:visible}
   .needle.fixed{position:fixed}
   .seam-host{position:relative}
-  .hero-visual{perspective:1200px}
-  .hv-inner{position:relative;transform-style:preserve-3d;will-change:transform}
+
+  /* ---- the spine: one thread sewn down the whole page ----
+     A vertical dashed seam pinned to the left edge. It is revealed top-down in step
+     with scroll, with the needle riding its leading edge, so the page reads as being
+     stitched together as you move through it. Decorative and behind everything. */
+  .spine{position:fixed;left:max(14px,2.2vw);top:0;bottom:0;width:2px;z-index:40;pointer-events:none;
+    background-image:linear-gradient(180deg,var(--gold) 0 9px,transparent 9px 16px);
+    background-size:2px 16px;background-repeat:repeat-y;
+    clip-path:inset(0% 0% 100% 0%);opacity:.5}
+  .spine-needle{position:fixed;left:max(14px,2.2vw);top:0;width:22px;height:22px;z-index:41;
+    margin-left:-10px;pointer-events:none;opacity:0;will-change:transform}
+  .spine-needle svg{display:block;width:100%;height:100%;overflow:visible}
+  @media(max-width:860px){.spine,.spine-needle{display:none}}
+  .hero-visual{perspective:1200px;position:relative;z-index:2}
+  .hv-inner{position:relative;transform-style:preserve-3d;will-change:transform;
+    /* Break out to the right only. Bleeding left as well clipped the headline, and a
+       hero that covers its own first line is bigger at the cost of being worse. */
+    width:calc(100% + 8vw);margin-right:-8vw}
+  @media(max-width:1100px){.hv-inner{width:calc(100% + 5vw);margin-right:-5vw}}
+  @media(max-width:860px){.hv-inner{width:100%;margin:0}}
   .fchip{position:absolute;z-index:3;background:rgba(255,253,249,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
     border:1px solid var(--line);box-shadow:0 16px 34px -18px rgba(26,23,20,.55);border-radius:12px;padding:9px 13px;
     font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:7px;color:var(--ink)}
@@ -306,17 +328,20 @@
   .gal-track{display:flex;gap:24px;padding:40px 26px;will-change:transform}
   .gal-card{flex:0 0 clamp(260px,32vw,400px);height:58vh;border-radius:20px;overflow:hidden;position:relative;
     display:flex;flex-direction:column;justify-content:flex-end;padding:30px;color:#fff;border:1px solid var(--line)}
-  .gal-card .bg{position:absolute;inset:0;z-index:0;transition:transform .6s var(--ease-standard)}
-  .gal-card:hover .bg{transform:scale(1.06)}
+  /* Real category photography. The image carries the card; the scrim only exists so
+     the type stays readable over it, and it is weighted to the bottom where the text
+     sits rather than flattening the whole picture. */
+  .gal-card .bg{position:absolute;inset:0;z-index:0;overflow:hidden}
+  .gal-card .bg img{width:100%;height:100%;object-fit:cover;display:block;
+    transition:transform .7s var(--ease-standard)}
+  .gal-card:hover .bg img{transform:scale(1.06)}
+  .gal-card .bg::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(to top,rgba(14,12,10,.88) 0%,rgba(14,12,10,.55) 38%,rgba(14,12,10,.12) 70%,rgba(14,12,10,.3) 100%)}
   .gal-card>*{position:relative;z-index:1}
   .gal-card .em{display:block;margin-bottom:auto;line-height:0}
-  .gal-card .em svg{width:52px;height:auto;fill:none;stroke:var(--gold-light);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 6px 14px rgba(0,0,0,.35))}
-  .gal-card h3{color:#fff;font-size:2rem}
-  .gal-card p{color:rgba(255,255,255,.86);margin-top:6px;font-size:.92rem}
-  .g1{background:linear-gradient(160deg,#7a4e0a,#1a1714)}
-  .g2{background:linear-gradient(160deg,#5b4a2f,#201a16)}
-  .g3{background:linear-gradient(160deg,#8a6d1f,#241c12)}
-  .g4{background:linear-gradient(160deg,#4a4038,#1a1714)}
+  .gal-card .em svg{width:44px;height:auto;fill:none;stroke:var(--gold-light);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 4px 12px rgba(0,0,0,.6))}
+  .gal-card h3{color:#fff;font-size:2rem;text-shadow:0 2px 18px rgba(0,0,0,.45)}
+  .gal-card p{color:rgba(255,255,255,.9);margin-top:6px;font-size:.92rem;text-shadow:0 1px 10px rgba(0,0,0,.5)}
   @media(max-width:860px){.gal-pin{min-height:auto}.gal-card{height:50vh}}
   /* 3D hero accent (ambient torus-knot "thread"; sits behind content).
      DISABLED — superseded by the purchase-journey animation in the showpiece, which
@@ -335,6 +360,9 @@
 </head>
 <body>
 <div class="scrollbar" id="scrollbar" aria-hidden="true"></div>
+<!-- The page spine: one thread stitched down the left edge as you scroll. -->
+<div class="spine" id="spine" aria-hidden="true"></div>
+<span class="spine-needle" id="spineNeedle" aria-hidden="true"></span>
 
 <!-- NAV -->
 <header class="nav" id="nav">
@@ -543,13 +571,13 @@
     </div>
     <div class="gal-pin">
       <div class="gal-track" id="galTrack">
-        <article class="gal-card"><div class="bg g1"></div><span class="em" aria-hidden="true"><svg viewBox="0 0 48 36"><rect x="4" y="4" width="40" height="25" rx="2.5"/><path d="M18 33h12M24 29v4"/></svg></span><h3>Electronics &amp; tech</h3><p>Phones, audio, computing</p></article>
-        <article class="gal-card"><div class="bg g2"></div><span class="em" aria-hidden="true"><svg viewBox="0 0 48 36"><path d="M12 4h24v14H12z"/><path d="M10 18h28v7H10zM14 25v7M34 25v7"/></svg></span><h3>Furniture &amp; home</h3><p>Living, bedroom, office</p></article>
-        <article class="gal-card"><div class="bg g3"></div><span class="em" aria-hidden="true"><svg viewBox="0 0 48 36"><path d="M18 5h12l3 6H15zM15 11h18l3 20H12z"/></svg></span><h3>Fashion &amp; apparel</h3><p>Labels, resellers, footwear</p></article>
-        <article class="gal-card"><div class="bg g4"></div><span class="em" aria-hidden="true"><svg viewBox="0 0 48 36"><path d="M10 13h28l-3 18H13zM17 13V8a7 7 0 0 1 14 0v5"/></svg></span><h3>Groceries &amp; retail</h3><p>FMCG, food, household</p></article>
-        <article class="gal-card"><div class="bg g1"></div><span class="em" aria-hidden="true"><svg viewBox="0 0 48 36"><circle cx="24" cy="18" r="13"/><path d="M24 5v26M11 18h26"/></svg></span><h3>Sport &amp; outdoor</h3><p>Fitness, cycling, camping</p></article>
-        <article class="gal-card"><div class="bg g2"></div><span class="em" aria-hidden="true"><svg viewBox="0 0 48 36"><path d="M8 24l4-9h24l4 9M8 24h32v5H8zM15 29v3M33 29v3"/></svg></span><h3>Auto &amp; hardware</h3><p>Parts, tools, trade supply</p></article>
-        <article class="gal-card"><div class="bg g3"></div><span class="em" aria-hidden="true"><svg viewBox="0 0 48 36"><path d="M24 10c-4-6-16-5-16 4 0 7 10 11 16 17 6-6 16-10 16-17 0-9-12-10-16-4z"/></svg></span><h3>Beauty &amp; health</h3><p>Skincare, wellness, pharmacy</p></article>
+        <article class="gal-card"><div class="bg"><img src="images/products/w/monitor-4k-1200.webp" alt="" width="1200" height="1200" loading="lazy" decoding="async"></div><span class="em" aria-hidden="true"><svg viewBox="0 0 48 36"><rect x="4" y="4" width="40" height="25" rx="2.5"/><path d="M18 33h12M24 29v4"/></svg></span><h3>Electronics &amp; tech</h3><p>Phones, audio, computing</p></article>
+        <article class="gal-card"><div class="bg"><img src="images/products/w/modular-sofa-1200.webp" alt="" width="1200" height="1200" loading="lazy" decoding="async"></div><span class="em" aria-hidden="true"><svg viewBox="0 0 48 36"><path d="M12 4h24v14H12z"/><path d="M10 18h28v7H10zM14 25v7M34 25v7"/></svg></span><h3>Furniture &amp; home</h3><p>Living, bedroom, office</p></article>
+        <article class="gal-card"><div class="bg"><img src="images/products/w/apparel-look-1200.webp" alt="" width="1200" height="1200" loading="lazy" decoding="async"></div><span class="em" aria-hidden="true"><svg viewBox="0 0 48 36"><path d="M18 5h12l3 6H15zM15 11h18l3 20H12z"/></svg></span><h3>Fashion &amp; apparel</h3><p>Labels, resellers, footwear</p></article>
+        <article class="gal-card"><div class="bg"><img src="images/products/w/grocery-essentials-1200.webp" alt="" width="1200" height="1200" loading="lazy" decoding="async"></div><span class="em" aria-hidden="true"><svg viewBox="0 0 48 36"><path d="M10 13h28l-3 18H13zM17 13V8a7 7 0 0 1 14 0v5"/></svg></span><h3>Groceries &amp; retail</h3><p>FMCG, food, household</p></article>
+        <article class="gal-card"><div class="bg"><img src="images/products/w/outdoor-pack-1200.webp" alt="" width="1200" height="1200" loading="lazy" decoding="async"></div><span class="em" aria-hidden="true"><svg viewBox="0 0 48 36"><circle cx="24" cy="18" r="13"/><path d="M24 5v26M11 18h26"/></svg></span><h3>Sport &amp; outdoor</h3><p>Fitness, cycling, camping</p></article>
+        <article class="gal-card"><div class="bg"><img src="images/products/w/cordless-drill-18v-1200.webp" alt="" width="1200" height="1200" loading="lazy" decoding="async"></div><span class="em" aria-hidden="true"><svg viewBox="0 0 48 36"><path d="M8 24l4-9h24l4 9M8 24h32v5H8zM15 29v3M33 29v3"/></svg></span><h3>Auto &amp; hardware</h3><p>Parts, tools, trade supply</p></article>
+        <article class="gal-card"><div class="bg"><img src="images/products/w/skincare-set-1200.webp" alt="" width="1200" height="1200" loading="lazy" decoding="async"></div><span class="em" aria-hidden="true"><svg viewBox="0 0 48 36"><path d="M24 10c-4-6-16-5-16 4 0 7 10 11 16 17 6-6 16-10 16-17 0-9-12-10-16-4z"/></svg></span><h3>Beauty &amp; health</h3><p>Skincare, wellness, pharmacy</p></article>
       </div>
     </div>
   </section>
@@ -932,10 +960,24 @@
     // scrubbed progress as the clip, so needle and thread can never disagree.
     var pn=makeNeedle(document.body,"fixed");
     G.set(pn,{x:-11,y:-9,rotation:135,transformOrigin:"50% 50%",autoAlpha:0});
+
+    // The spine: the same thread sewn vertically down the page. The needle rides its
+    // leading edge and dips side to side once per stitch, so scrolling the page is
+    // literally stitching it together. Both are driven off one scrubbed progress.
+    var spine=$("#spine"), sNeedle=$("#spineNeedle");
+    if(sNeedle){
+      sNeedle.innerHTML=NEEDLE_SVG;
+      G.set(sNeedle,{rotation:215,transformOrigin:"50% 50%",autoAlpha:0});
+    }
     ScrollTrigger.create({start:0,end:endFn,scrub:.3,invalidateOnRefresh:true,
       onUpdate:function(self){
-        var p=self.progress;
-        G.set(pn,{x:p*innerWidth-11, autoAlpha:(p>0.004 && p<0.997)?1:0});
+        var p=self.progress, live=(p>0.004 && p<0.997);
+        G.set(pn,{x:p*innerWidth-11, autoAlpha:live?1:0});
+        if(spine) spine.style.clipPath="inset(0% 0% "+((1-p)*100).toFixed(2)+"% 0%)";
+        if(sNeedle){
+          var y=p*innerHeight;
+          G.set(sNeedle,{y:y-11, x:Math.sin(p*innerHeight/26)*5, autoAlpha:live?1:0});
+        }
       }});
   }
 
@@ -976,11 +1018,18 @@
         .to(cursor,{scale:1,duration:.22,ease:"power2.out"},at_+0.09)
         .call(function(){cursor.classList.remove("tap")},null,at_+0.4);
     }
-    function show(tl, i, at_){                 // cross-dissolve one stage to the next
+    // Hand one stage to the next. The outgoing stage leaves faster than the incoming
+    // arrives, and the incoming waits for it — a straight cross-dissolve left both
+    // legible at ~50% for a beat, which reads as a glitch rather than a transition.
+    function show(tl, i, at_){
       stages.forEach(function(s,k){
-        tl.to(s,{autoAlpha:k===i?1:0,y:k===i?0:-6,duration:.45,ease:"power2.out"},at_);
+        if(k!==i) tl.to(s,{autoAlpha:0,y:-6,duration:.22,ease:"power2.in"},at_);
       });
-      tl.fromTo(stages[i],{y:10},{y:0,duration:.5,ease:"power3.out"},at_);
+      // immediateRender:false — a fromTo renders its from-state at build time by
+      // default, which would blank every stage (including the resting one) before
+      // the timeline has even played a frame.
+      tl.fromTo(stages[i],{autoAlpha:0,y:10},
+        {autoAlpha:1,y:0,duration:.42,ease:"power3.out",immediateRender:false},at_+0.2);
     }
     function setUrl(tl, s, at_){ tl.call(function(){ if(url) url.textContent=s; },null,at_); }
 
