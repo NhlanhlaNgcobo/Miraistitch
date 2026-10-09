@@ -47,7 +47,7 @@ export default async function Admin() {
     const title = String(formData.get("title") || "").trim();
     const price = Math.round(parseFloat(String(formData.get("price") || "0")) * 100);
     const stock = parseInt(String(formData.get("stock") || "0"), 10);
-    const image = String(formData.get("image") || "🛍️");
+    const image = String(formData.get("image") || "");
     if (!title || price < 0) return;
     await db.from("products").insert({ store_id: sid, title, price_cents: price, stock, image });
     revalidatePath("/admin");
@@ -125,7 +125,7 @@ export default async function Admin() {
                 <div><label>New product</label><input name="title" placeholder="Title" required /></div>
                 <div><label>Price (R)</label><input name="price" type="number" step="0.01" placeholder="0.00" required /></div>
                 <div><label>Stock</label><input name="stock" type="number" placeholder="0" /></div>
-                <div><label>Icon</label><input name="image" placeholder="🛍️" /></div>
+                <div><label>Product photo URL</label><input name="image" type="url" placeholder="https://…" /></div>
                 <button className="btn gold" type="submit">Add</button>
               </form>
             </div>

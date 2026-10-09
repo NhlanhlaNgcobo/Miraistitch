@@ -28,7 +28,7 @@ create table if not exists public.products (
   description text default '',
   price_cents int  not null check (price_cents >= 0),
   stock       int  not null default 0 check (stock >= 0),
-  image       text default '🛍️',
+  image       text default '',
   active      boolean not null default true,
   position    int not null default 0,
   created_at  timestamptz not null default now()

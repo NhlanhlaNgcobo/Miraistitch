@@ -35,14 +35,15 @@ begin
   on conflict (store_id) do update set blocks = excluded.blocks, published_at = now();
 end $$;
 
--- Real product photography for the demo storefront.
---
--- TODO: the six photos in app/public/images/products/ are the old craft catalogue
--- (rooibos, biltong, shweshwe tote, beaded earrings, braai rub, handwoven basket).
--- The seed above was broadened to a general catalogue (electronics, furniture, home,
--- sport, hardware), so those photos no longer match any product and the mapping that
--- used to live here has been removed rather than left as dead code.
---
--- Until replacement photography exists, the demo storefront falls back to the glyphs
--- set in the insert above. To restore photos, drop new PNGs into
--- app/public/images/products/ and re-add an update that maps title -> path.
+-- Studio product photography for the general-category demo catalogue.
+update public.products
+set image = case title
+  when '27" 4K Monitor' then '/images/products/monitor-4k.png'
+  when 'Oak Desk Chair' then '/images/products/oak-desk-chair.png'
+  when 'Wireless Earbuds' then '/images/products/wireless-earbuds.png'
+  when 'Running Shoes' then '/images/products/running-shoes.png'
+  when 'Cotton Towel Set' then '/images/products/cotton-towel-set.png'
+  when 'Cordless Drill 18V' then '/images/products/cordless-drill-18v.png'
+  else image
+end
+where title in ('27" 4K Monitor', 'Oak Desk Chair', 'Wireless Earbuds', 'Running Shoes', 'Cotton Towel Set', 'Cordless Drill 18V');
