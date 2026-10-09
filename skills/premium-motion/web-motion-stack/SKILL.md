@@ -17,6 +17,21 @@ description: "22 web-native motion and 3D skills — smooth scroll, page transit
 
 This stack fills exactly those gaps, plus the React animation ecosystem and the broader 3D engines.
 
+## Before you install anything — check what the browser now does for free
+
+This harvest predates some of the platform. Verified 9 Oct 2026:
+
+- **Scroll reveals, progress bars, simple parallax** → native CSS `animation-timeline: view()`. Chrome 115+, Safari 26+. **Firefox is still `preview`** (not stable, ~82% global), so ship it as progressive enhancement or behind `@supports`. Off the main thread, cannot jank, zero bytes.
+- **Page transitions on a static multi-page site** → `@view-transition { navigation: auto }`. Two lines. Chrome 126+, Safari 18.2+, Firefox skips it silently.
+- **Tooltips / popovers positioned against a trigger** → CSS anchor positioning, Baseline since January 2026.
+
+GSAP ScrollTrigger is still correct for pinning, scrubbing and coordinated sequences — roughly the hard 20%. It is the easy 80% that no longer needs a library.
+
+→ Full detail, support tables and the version-drift list: [`../premium-motion-site/references/platform-currency.md`](../premium-motion-site/references/platform-currency.md)
+
+**Three API-specific warnings for this harvest** (upstream last updated 20 Nov 2025):
+`animejs/` documents **v3; v4 rewrote the API** · `motion-framer/` is behind **Motion v14** · `react-three-fiber/` is behind **R3F 9 / Three 0.186**. Verify any snippet from those three against current docs.
+
 ## Routing
 
 ### Scroll — start here for premium feel

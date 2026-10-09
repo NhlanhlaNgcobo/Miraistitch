@@ -73,6 +73,8 @@ Start at the top of that table. **Smooth scroll plus one well-executed text trea
 
 Now apply the motion library. Default to composing **2–4 atomic rules** per section; reach for a blueprint only when a section genuinely needs 4–5 phase orchestration.
 
+**Check the platform before reaching for a library.** Entrance reveals, progress bars and simple parallax now run in pure CSS via `animation-timeline: view()` — off the main thread, zero bytes, cannot jank. Ship it as progressive enhancement (Firefox is still `preview`, ~82% global). GSAP stays correct for pinning, scrubbing and coordinated sequences. → `references/platform-currency.md`
+
 → **`../hyperframes-motion/WEB-CONTRACT.md` first** — the rules were written for a video renderer; this translates them (triggers instead of seek, reduced-motion, no CLS).
 → `../hyperframes-motion/rules-index.md` → 48 atomic recipes
 → `../hyperframes-motion/blueprints-index.md` → 22 multi-phase templates
@@ -182,6 +184,7 @@ This bites MiraiStitch directly: the landing page's R0 / R290 / R690 pricing and
 | Need | Skill |
 | --- | --- |
 | Anti-"AI motion" rules, spring presets, critique loop, honesty rules | **`references/anti-ai-motion.md`** |
+| What the browser does natively now (and what that retires) | **`references/platform-currency.md`** |
 | Committed visual direction | `../hyperframes-frames/` (13 systems + 18-token theme contract) |
 | An actual **video** deliverable (not a website) | `../motion-design-film/` |
 | Original visual direction | `../../frontend-design/` |

@@ -83,9 +83,12 @@ safe to ship here. Keep it that way.
 - `web-motion-stack/gsap-scrolltrigger/assets/examples/README.md` has two links pointing at
   `../references/` that should be `../../references/`. That's a pre-existing upstream typo, left
   as-is to keep the harvest byte-for-byte. Both target files exist one level up.
-- `web-motion-stack` upstream was last updated 20 November 2025. Its architectural guidance ages
-  well; verify version numbers and API details against current docs, especially for Motion and
-  React Three Fiber.
+- `web-motion-stack` upstream was last updated 20 November 2025. Architecture holds up; **API
+  specifics do not** — `animejs/` documents v3 (v4 rewrote the API), `motion-framer/` is behind
+  Motion v14, `react-three-fiber/` is behind R3F 9 / Three 0.186. Verified 9 Oct 2026 and
+  recorded in [`premium-motion-site/references/platform-currency.md`](premium-motion-site/references/platform-currency.md),
+  which also covers what the browser now does natively (scroll-driven animations, View
+  Transitions, anchor positioning) and what that retires.
 - `hyperframes-motion/examples/*.html` are paused video compositions — they open as a frozen
   frame. Run `window.__timelines.main.play()` in the console to watch one.
 - `motion-design-film/UPSTREAM-README.md` references an `examples/howseen-launch/` directory that
