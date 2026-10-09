@@ -9,9 +9,15 @@
 <meta property="og:description" content="An AI store builder, local payments with no platform sales fee, and local delivery. Any product, any category — built for South African business.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Cpath d='M7 20 L13 11 L16 16 L19 11 L25 20' fill='none' stroke='%23d9a94e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' stroke-dasharray='3 2.4'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<!-- Fonts and libraries are self-hosted in vendor/. Previously these came from three
+     separate CDNs (fonts.googleapis, fonts.gstatic, cdnjs, jsdelivr), so first paint
+     waited on DNS + TLS + fetch for each one and load time swung wildly with network
+     conditions. Same bytes, one origin, no extra handshakes.
+     fonts.css keeps Google's unicode-range rules, so only the subsets actually used
+     are downloaded, and font-display:swap paints text immediately in the fallback. -->
+<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Cormorant-600-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/HankenGrotesk-400-latin.woff2" crossorigin>
+<link rel="stylesheet" href="vendor/fonts.css">
 <style>
   /* ============================================================
      MiraiStitch landing — "editorial fashion-house, Linear restraint"
@@ -43,7 +49,7 @@
 
   /* word-mask reveal: words sit in an overflow-hidden sleeve, readable with JS off */
   .rt-word{display:inline-block;overflow:hidden;vertical-align:top}
-  .rt-ink{display:inline-block;will-change:transform}
+  .rt-ink{display:inline-block}
   .accent{color:var(--gold-deep);font-style:italic}
 
   /* eyebrow */
@@ -291,7 +297,7 @@
   .courier,.sp-prod{transition:transform .3s var(--ease-standard),box-shadow .3s}
   .courier:hover,.sp-prod:hover{transform:translateY(-3px);box-shadow:0 16px 30px -20px rgba(26,23,20,.45)}
   .plans{perspective:1100px}
-  .plan{will-change:transform}
+  .plan:hover{will-change:transform}
   /* pinned horizontal gallery */
   .gallery{overflow:hidden;border-top:1px solid var(--line)}
   .gal-head{padding:96px 0 12px}
@@ -631,9 +637,9 @@
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
 <!-- Three.js r128 — only needed by the torus-knot hero accent, which is currently off
      (HERO3D below). Left commented out rather than deleted so re-enabling is one step:
      uncomment this tag and set HERO3D = true. Saves ~150 KB on every page load.
@@ -832,8 +838,14 @@
   // ---------- marquee drift, tied to scroll direction (continuous input) ----------
   if(mq){
     var mqTween=G.to(mq,{xPercent:-50,repeat:-1,duration:26,ease:"none"});
+    // An infinite tween costs a tick forever. Only run it while the strip is on
+    // screen and the tab is visible — the same rule the hero journey follows.
     ScrollTrigger.create({trigger:".strip",start:"top bottom",end:"bottom top",
-      onUpdate:function(self){ mqTween.timeScale(self.direction===1?1:-1); }});
+      onUpdate:function(self){ mqTween.timeScale(self.direction===1?1:-1); },
+      onToggle:function(self){ self.isActive ? mqTween.play() : mqTween.pause(); }});
+    document.addEventListener("visibilitychange",function(){
+      document.hidden ? mqTween.pause() : mqTween.play();
+    });
   }
 
   // ---------- section headlines: kinetic reveal on scroll (different beat) ----------
@@ -879,15 +891,23 @@
   }
 
   // ---------- tilt helper (depth on pointer; never on touch) ----------
+  // The rect is cached on enter instead of measured on every move: getBoundingClientRect
+  // forces a synchronous layout, and doing that per pointermove is a reliable way to
+  // drop frames while the user is interacting.
   function tilt(el, strength, inner){
     if(matchMedia("(pointer:coarse)").matches) return;
-    var t=inner||el;
+    var t=inner||el, r=null;
     var rx=G.quickTo(t,"rotationX",{duration:.5,ease:"power3.out"});
     var ry=G.quickTo(t,"rotationY",{duration:.5,ease:"power3.out"});
-    el.addEventListener("pointermove",function(e){var r=el.getBoundingClientRect();
+    function measure(){ r=el.getBoundingClientRect(); }
+    el.addEventListener("pointerenter",measure);
+    el.addEventListener("pointermove",function(e){
+      if(!r) measure();
       ry((e.clientX-r.left-r.width/2)/r.width*strength);
       rx(-(e.clientY-r.top-r.height/2)/r.height*strength);});
-    el.addEventListener("pointerleave",function(){rx(0);ry(0);});
+    el.addEventListener("pointerleave",function(){r=null;rx(0);ry(0);});
+    addEventListener("scroll",function(){r=null;},{passive:true});
+    addEventListener("resize",function(){r=null;},{passive:true});
   }
 
   // ---------- hero depth: 3D tilt + floating chips (idle drift) ----------
@@ -1002,11 +1022,18 @@
     if(route) tl.to(route,{clipPath:SEAM_OPEN,duration:1.5,ease:"power1.inOut"},6.3);
     if(van && route){
       tl.to(van,{autoAlpha:1,duration:.2},6.35);
+      // Pre-sample the path once. getTotalLength()/getPointAtLength() are SVG geometry
+      // calls; running three of them per frame inside a loop that repeats forever is
+      // real work for no benefit, since the path never changes.
+      var PTS=72, pts=[], _L=route.getTotalLength();
+      for(var i=0;i<=PTS;i++){
+        var a=route.getPointAtLength(_L*(i/PTS)),
+            b=route.getPointAtLength(Math.min(_L,_L*(i/PTS)+1));
+        pts.push({x:a.x,y:a.y,r:Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI});
+      }
       tl.to({p:0},{p:1,duration:1.5,ease:"power1.inOut",onUpdate:function(){
-        var L=route.getTotalLength(), t=this.targets()[0].p;
-        var a=route.getPointAtLength(L*t), b=route.getPointAtLength(Math.min(L,L*t+1));
-        van.setAttribute("transform","translate("+a.x+","+a.y+") rotate("+
-          (Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI)+")");
+        var q=pts[Math.round(this.targets()[0].p*PTS)];
+        van.setAttribute("transform","translate("+q.x+","+q.y+") rotate("+q.r+")");
       }},6.35);
       tl.to(van,{autoAlpha:0,duration:.3},7.95);
     }
@@ -1048,9 +1075,16 @@
     $$(".mag").forEach(function(btn){
       var mx=G.quickTo(btn,"x",{duration:.4,ease:"power3.out"});
       var my=G.quickTo(btn,"y",{duration:.4,ease:"power3.out"});
-      btn.addEventListener("pointermove",function(e){var r=btn.getBoundingClientRect();
-        mx((e.clientX-r.left-r.width/2)*.3); my((e.clientY-r.top-r.height/2)*.5);});
-      btn.addEventListener("pointerleave",function(){mx(0);my(0);});
+      // rect cached on enter — measuring per move forces layout on every frame
+      var r=null;
+      function measure(){ var b=btn.getBoundingClientRect();
+        r={cx:b.left+b.width/2 - (G.getProperty(btn,"x")||0), cy:b.top+b.height/2 - (G.getProperty(btn,"y")||0)}; }
+      btn.addEventListener("pointerenter",measure);
+      btn.addEventListener("pointermove",function(e){
+        if(!r) measure();
+        mx((e.clientX-r.cx)*.3); my((e.clientY-r.cy)*.5);});
+      btn.addEventListener("pointerleave",function(){r=null;mx(0);my(0);});
+      addEventListener("scroll",function(){r=null;},{passive:true});
     });
   }
 })();
