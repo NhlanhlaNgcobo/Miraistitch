@@ -4,3 +4,17 @@ node_modules/
 *.log
 .env
 .env.*
+# ...but the template must be committed — the app is unusable without a list of
+# the variables it needs, and `.env.*` above was silently swallowing it.
+!.env.example
+!**/.env.example
+
+# build artefacts
+.next/
+out/
+*.tsbuildinfo
+
+# large source photography — the web-sized WebP in images/products/w/ is what
+# the pages actually load (23.4 MB of PNG vs 1.28 MB of WebP)
+images/products/*.png
+app/public/images/products/*.png
