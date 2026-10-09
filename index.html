@@ -200,8 +200,15 @@
     .feat{padding:80px 0}.wedge{padding:80px 0}
   }
   /* ---- v2 motion: progress stitch, hero depth, gallery, tilt ---- */
-  .scrollbar{position:fixed;top:0;left:0;height:3px;width:100%;z-index:70;transform:scaleX(0);transform-origin:left center;
-    background-image:linear-gradient(90deg,var(--gold) 0 10px,transparent 10px 17px);background-size:17px 3px;background-repeat:repeat-x;pointer-events:none}
+  /* The stitch — one dashed gold thread in three expressions: page progress (here), the hero
+     underline, and the section dividers. Revealed by clip, never scaled, so each stitch keeps
+     its true size and they accumulate one at a time instead of stretching. */
+  .scrollbar{position:fixed;top:0;left:0;height:3px;width:100%;z-index:70;
+    background-image:linear-gradient(90deg,var(--gold) 0 10px,transparent 10px 17px);background-size:17px 3px;background-repeat:repeat-x;pointer-events:none;
+    clip-path:inset(0% 100% 0% 0%)}
+  .seam-rule{height:2px;width:min(1120px,calc(100% - 48px));margin:0 auto;
+    background-image:linear-gradient(90deg,var(--gold) 0 9px,transparent 9px 16px);background-size:16px 2px;background-repeat:repeat-x;opacity:.5}
+  .seam-rule.on-ink{background-image:linear-gradient(90deg,var(--gold-light) 0 9px,transparent 9px 16px);opacity:.75}
   .hero-visual{perspective:1200px}
   .hv-inner{position:relative;transform-style:preserve-3d;will-change:transform}
   .fchip{position:absolute;z-index:3;background:rgba(255,253,249,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
@@ -395,6 +402,8 @@
     </div>
   </section>
 
+  <div class="seam-rule" data-seam aria-hidden="true"></div>
+
   <!-- SHOWCASE: pinned horizontal gallery -->
   <section class="gallery" id="showcase">
     <div class="wrap gal-head">
@@ -426,6 +435,8 @@
       </div>
     </div>
   </section>
+
+  <div class="seam-rule" data-seam aria-hidden="true"></div>
 
   <!-- PRICING -->
   <section class="pricing" id="pricing">
@@ -600,6 +611,20 @@
 
   G.registerPlugin(window.ScrollTrigger);
 
+  // ---------- the stitch: reveal a dashed seam by clipping it open ----------
+  // Scaling a dashed line stretches the dash pattern, so the stitches change size as they
+  // animate. Clipping reveals them at their true size, one at a time. `steps(n)` with n = the
+  // real number of dashes makes each one land discretely, like a needle making the stitch.
+  function stitchCount(el, pitch){
+    var w = el.getBoundingClientRect().width;
+    return Math.max(4, Math.min(48, Math.round(w / (pitch || 16))));
+  }
+  var SEAM_SHUT = "inset(0% 100% 0% 0%)", SEAM_OPEN = "inset(0% 0% 0% 0%)";
+  function stitchVars(el, pitch, dur){
+    return {clipPath: SEAM_OPEN, duration: dur || .9,
+      ease: "steps(" + stitchCount(el, pitch) + ")"};
+  }
+
   // ---------- smooth scroll (the signature, paired with kinetic type) ----------
   if(window.Lenis){
     var lenis=new Lenis({duration:1.1, easing:function(t){return 1-Math.pow(1-t,3)}});
@@ -611,14 +636,17 @@
   // ---------- hero: kinetic headline (signature) + staggered support ----------
   var heroInks=splitWords($(".hero h1"));
   G.set(heroInks,{yPercent:110});
+  var heroSeam=$(".seam-draw");
+  if(heroSeam) G.set(heroSeam,{clipPath:SEAM_SHUT});
   var tl=G.timeline({defaults:{ease:"power3.out"}});
   tl.to(heroInks,{yPercent:0,duration:.9,stagger:.045},0.1)
     .from(".hero .eyebrow",{y:16,opacity:0,duration:.6},0.1)
-    .from(".seam-draw",{scaleX:0,transformOrigin:"left center",duration:.8},0.5)
     .from(".hero .sub",{y:18,opacity:0,duration:.7},0.55)
     .from(".hero-cta",{y:16,opacity:0,duration:.6},0.7)
     .from(".hero-foot",{y:12,opacity:0,duration:.5},0.8)
     .from(".showpiece",{y:40,opacity:0,duration:1,ease:"expo.out"},0.3);
+  // the seam sews itself under the headline, stitch by stitch
+  if(heroSeam) tl.to(heroSeam, stitchVars(heroSeam, 18, .8), 0.5);
 
   // hero visual drifts slower than scroll (depth, one continuous input)
   G.to(".hero-visual",{yPercent:-14,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:true}});
@@ -692,10 +720,19 @@
     G.to(c,{y:"+=8",duration:2.4+i*.5,ease:"sine.inOut",yoyo:true,repeat:-1,delay:1.5});
   });
 
-  // ---------- scroll-progress "stitch" bar ----------
+  // ---------- the thread sews itself: page progress, one stitch at a time ----------
+  // Smooth (ease:none) rather than stepped — the dash pattern already makes stitches appear
+  // discretely as the clip opens, and stepping a scrubbed tween reads as stutter.
   var bar=$("#scrollbar");
-  if(bar) G.to(bar,{scaleX:1,ease:"none",
+  if(bar) G.to(bar,{clipPath:"inset(0% 0% 0% 0%)",ease:"none",
     scrollTrigger:{start:0,end:function(){return document.body.scrollHeight-innerHeight},scrub:.3,invalidateOnRefresh:true}});
+
+  // ---------- the thread re-emerges between sections ----------
+  $$("[data-seam]").forEach(function(el){
+    G.set(el,{clipPath:SEAM_SHUT});
+    ScrollTrigger.create({trigger:el,start:"top 92%",once:true,
+      onEnter:function(){ G.to(el, stitchVars(el, 16, 1.1)); }});
+  });
 
   // ---------- pinned horizontal gallery (desktop) ----------
   var galTrack=$("#galTrack");
