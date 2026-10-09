@@ -13,24 +13,36 @@ begin
   end if;
 
   insert into public.stores (owner_id, name, slug, tagline)
-  values (v_owner, 'Indlela Craft Co.', 'indlela', 'Handmade in KwaZulu-Natal')
+  values (v_owner, 'Northgate Trading', 'northgate', 'Tech, home & everything between')
   on conflict (slug) do update set name = excluded.name
   returning id into v_store;
 
   delete from public.products where store_id = v_store;
   insert into public.products (store_id, title, description, price_cents, stock, image, position) values
-    (v_store, 'Organic Rooibos Tea', '250g loose-leaf, Cederberg grown', 8900, 120, '🍵', 1),
-    (v_store, 'Original Beef Biltong', '500g, air-dried the old way', 18500, 60, '🥩', 2),
-    (v_store, 'Shweshwe Tote Bag', 'Handmade, three-cat print', 24900, 24, '👜', 3),
-    (v_store, 'Beaded Earrings', 'Hand-strung Zulu beadwork', 16000, 40, '💠', 4),
-    (v_store, 'Braai Spice Rub', '200g all-purpose smoky rub', 7500, 200, '🌶️', 5),
-    (v_store, 'Handwoven Basket', 'Natural ilala palm, large', 42000, 8, '🧺', 6);
+    (v_store, '27" 4K Monitor', 'IPS panel, 60Hz, HDMI + USB-C', 429900, 18, '🖥️', 1),
+    (v_store, 'Oak Desk Chair', 'Ergonomic, adjustable lumbar', 245000, 12, '🪑', 2),
+    (v_store, 'Wireless Earbuds', 'Active noise cancelling, 30h', 89900, 64, '🎧', 3),
+    (v_store, 'Running Shoes', 'Road, sizes 6-12', 129900, 40, '👟', 4),
+    (v_store, 'Cotton Towel Set', '4-piece, 550gsm', 54900, 200, '🧺', 5),
+    (v_store, 'Cordless Drill 18V', '2 batteries, carry case', 189900, 9, '🔧', 6);
 
   insert into public.layouts (store_id, blocks, published_at)
   values (v_store,
-    '[{"type":"hero","props":{"heading":"Beautifully handmade, delivered.","sub":"Shop our latest collection, crafted in South Africa.","btn":"Shop now"}},
+    '[{"type":"hero","props":{"heading":"Everything you need, delivered.","sub":"Tech, furniture, home and more — shipped across South Africa.","btn":"Shop now"}},
       {"type":"products","props":{"title":"Featured products","cols":"3"}},
       {"type":"newsletter","props":{"heading":"Join the list","btn":"Subscribe"}}]'::jsonb,
     now())
   on conflict (store_id) do update set blocks = excluded.blocks, published_at = now();
 end $$;
+
+-- Real product photography for the demo storefront.
+--
+-- TODO: the six photos in app/public/images/products/ are the old craft catalogue
+-- (rooibos, biltong, shweshwe tote, beaded earrings, braai rub, handwoven basket).
+-- The seed above was broadened to a general catalogue (electronics, furniture, home,
+-- sport, hardware), so those photos no longer match any product and the mapping that
+-- used to live here has been removed rather than left as dead code.
+--
+-- Until replacement photography exists, the demo storefront falls back to the glyphs
+-- set in the insert above. To restore photos, drop new PNGs into
+-- app/public/images/products/ and re-add an update that maps title -> path.

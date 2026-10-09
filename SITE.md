@@ -1,7 +1,8 @@
 # MiraiStitch — frontend
 
-Marketing frontend for **MiraiStitch**, a South African commerce platform for makers,
-fashion and craft brands. Static, no build step, no dependencies.
+Marketing frontend for **MiraiStitch**, a South African ecommerce platform for any product
+category — electronics, furniture, fashion, groceries and everything between. Static, no build
+step, no dependencies.
 
 ## Files
 - `index.html` — the page

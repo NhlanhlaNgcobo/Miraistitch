@@ -1,6 +1,6 @@
 # MiraiStitch
 
-A South African commerce platform — a localised, maker-focused alternative to Shopify.
+A South African commerce platform — a localised alternative to Shopify, for any product category.
 Built as a static, dependency-free frontend prototype: a marketing landing page, a visual
 drag-and-drop store builder, a merchant admin, and a live storefront with a ZAR checkout.
 Made by [Mirai Stack](https://miraistack.co.za), Durban.

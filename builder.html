@@ -223,17 +223,17 @@
   function products(){
     try{var s=JSON.parse(localStorage.getItem(SKEY));if(s&&s.products&&s.products.length)return s.products}catch(e){}
     return [
-      {title:"Rooibos Tea",price:8900,img:"🍵"},{title:"Beef Biltong",price:18500,img:"🥩"},
-      {title:"Shweshwe Tote",price:24900,img:"👜"},{title:"Beaded Hoops",price:16000,img:"💠"},
-      {title:"Braai Rub",price:7500,img:"🌶️"},{title:"Ilala Basket",price:42000,img:"🧺"}
+      {title:"27\" 4K Monitor",price:429900,img:"🖥️"},{title:"Oak Desk Chair",price:245000,img:"🪑"},
+      {title:"Wireless Earbuds",price:89900,img:"🎧"},{title:"Running Shoes",price:129900,img:"👟"},
+      {title:"Cotton Towel Set",price:54900,img:"🧺"},{title:"Cordless Drill 18V",price:189900,img:"🔧"}
     ];
   }
 
   // ---- block catalog ----
   var CAT={
-    hero:{label:"Hero",desc:"Big headline + button",icon:'<path d="M4 5h16v9H4zM8 18h8"/>',props:{heading:"Beautifully handmade, delivered.",sub:"Shop our latest collection, crafted in South Africa.",btn:"Shop now",align:"center"}},
+    hero:{label:"Hero",desc:"Big headline + button",icon:'<path d="M4 5h16v9H4zM8 18h8"/>',props:{heading:"Everything you need, delivered.",sub:"Tech, furniture, home and more - shipped across South Africa.",btn:"Shop now",align:"center"}},
     products:{label:"Product grid",desc:"Show your products",icon:'<path d="M4 7l8-4 8 4-8 4-8-4zM4 7v10l8 4 8-4V7M12 11v10"/>',props:{title:"Featured products",cols:"3"}},
-    richtext:{label:"Rich text",desc:"A heading + paragraph",icon:'<path d="M4 6h16M4 12h16M4 18h10"/>',props:{heading:"Our story",body:"We started MiraiStitch to help South African makers sell beautifully online — no code, no fuss, just your craft and your customers."}},
+    richtext:{label:"Rich text",desc:"A heading + paragraph",icon:'<path d="M4 6h16M4 12h16M4 18h10"/>',props:{heading:"Our story",body:"We started MiraiStitch to help South African businesses sell beautifully online — no code, no fuss, just your craft and your customers."}},
     banner:{label:"Promo banner",desc:"Highlight an offer",icon:'<path d="M3 5h18v6H3zM6 11v8M18 11v8"/>',props:{emoji:"🎁",heading:"Free delivery over R500",sub:"This week only, to any Pudo locker nationwide.",btn:"Grab it"}},
     collection:{label:"Collections",desc:"Category cards",icon:'<path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/>',props:{title:"Shop by category"}},
     testimonial:{label:"Testimonial",desc:"A customer quote",icon:'<path d="M7 7h4v6H7zM13 7h4v6h-4zM7 13s0 4 4 4M13 13s0 4 4 4"/>',props:{quote:"The quality is unreal and it arrived in two days.",author:"Lerato M., Johannesburg"}},
@@ -260,7 +260,7 @@
       return '<div class="b-products"><h2>'+esc(p.title)+'</h2><div class="pg c'+(p.cols||"3")+'">'+items.map(function(x){return '<div class="pc"><div class="pci">'+(x.img||"🛍️")+'</div><div class="pcb"><div class="pcn">'+esc(x.title)+'</div><div class="pcp">'+R(x.price)+'</div></div></div>'}).join("")+'</div></div>';}
     if(b.type==="richtext")return '<div class="b-rich"><h2>'+esc(p.heading)+'</h2><p>'+esc(p.body)+'</p></div>';
     if(b.type==="banner")return '<div class="b-banner"><div class="be">'+(p.emoji||"🎁")+'</div><div><h3>'+esc(p.heading)+'</h3><p>'+esc(p.sub)+'</p></div><span class="b-btn">'+esc(p.btn)+'</span></div>';
-    if(b.type==="collection"){var cats=[["👗","Fashion"],["💠","Beadwork"],["🌶️","Food & spice"],["🕯️","Home"]];
+    if(b.type==="collection"){var cats=[["🖥️","Electronics"],["🪑","Furniture"],["👟","Fashion"],["🏠","Home"]];
       return '<div class="b-collection"><h2>'+esc(p.title)+'</h2><div class="cr">'+cats.map(function(c){return '<div class="cc"><div class="ccb"></div><span>'+c[0]+'</span><b>'+c[1]+'</b></div>'}).join("")+'</div></div>';}
     if(b.type==="testimonial")return '<div class="b-quote"><blockquote>"'+esc(p.quote)+'"</blockquote><div class="who">— '+esc(p.author)+'</div></div>';
     if(b.type==="newsletter")return '<div class="b-news"><h3>'+esc(p.heading)+'</h3><div class="nf"><input placeholder="you@example.co.za"><span class="b-btn">'+esc(p.btn)+'</span></div></div>';

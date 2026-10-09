@@ -1,5 +1,5 @@
 /* ============================================================
-   MiraiStitch — commerce for South African makers
+   MiraiStitch — ecommerce built for South Africa
    Design system: warm porcelain + stone-ink + refined gold.
    Display: Cormorant · Body/UI: Hanken Grotesk.
    Signature device: the "stitch" — a gold dashed seam.
@@ -132,7 +132,7 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.05;letter-spa
   font-weight:600;font-size:.82rem;padding:6px 13px;border-radius:999px;margin-bottom:24px}
 .made-chip svg{width:15px;height:15px}
 
-/* hero visual: a crafted mock storefront card */
+/* hero visual: a mock storefront card */
 .shopcard{position:relative;background:var(--paper-card);border:1px solid var(--line);border-radius:22px;
   box-shadow:var(--shadow-lg);overflow:hidden;transform:rotate(-1.2deg)}
 .shopcard .bar{display:flex;align-items:center;gap:7px;padding:13px 16px;border-bottom:1px solid var(--line);background:#fcfbf9}

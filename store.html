@@ -218,18 +218,18 @@
 
   // ---- shared state (seed if admin never opened) ----
   var DEFAULT_STATE={
-    store:{name:"Indlela Craft Co.",tagline:"Handmade in KwaZulu-Natal"},nextOrder:1002,setup:{},
+    store:{name:"Northgate Trading",tagline:"Tech, home & everything between"},nextOrder:1002,setup:{},
     products:[
-      {id:"p1",title:"Organic Rooibos Tea",desc:"250g loose-leaf",price:8900,stock:120,img:"🍵",active:true},
-      {id:"p2",title:"Original Beef Biltong",desc:"500g, air-dried",price:18500,stock:60,img:"🥩",active:true},
-      {id:"p3",title:"Shweshwe Tote Bag",desc:"Three-cat print",price:24900,stock:24,img:"👜",active:true},
-      {id:"p4",title:"Beaded Earrings",desc:"Zulu beadwork",price:16000,stock:40,img:"💠",active:true},
-      {id:"p5",title:"Braai Spice Rub",desc:"200g smoky rub",price:7500,stock:200,img:"🌶️",active:true},
-      {id:"p6",title:"Handwoven Basket",desc:"Ilala palm, large",price:42000,stock:8,img:"🧺",active:true}
+      {id:"p1",title:"27\" 4K Monitor",desc:"IPS, 60Hz, HDMI",price:429900,stock:18,img:"🖥️",active:true},
+      {id:"p2",title:"Oak Desk Chair",desc:"Ergonomic, lumbar support",price:245000,stock:12,img:"🪑",active:true},
+      {id:"p3",title:"Wireless Earbuds",desc:"ANC, 30h battery",price:89900,stock:64,img:"🎧",active:true},
+      {id:"p4",title:"Running Shoes",desc:"Road, sizes 6-12",price:129900,stock:40,img:"👟",active:true},
+      {id:"p5",title:"Cotton Towel Set",desc:"4-piece, 550gsm",price:54900,stock:85,img:"🧺",active:true},
+      {id:"p6",title:"Cordless Drill 18V",desc:"2 batteries, case",price:189900,stock:9,img:"🔧",active:true}
     ],orders:[]
   };
   var DEFAULT_LAYOUT=[
-    {id:"h",type:"hero",props:{heading:"Beautifully handmade, delivered.",sub:"Shop our latest collection, crafted in South Africa.",btn:"Shop now",align:"center"}},
+    {id:"h",type:"hero",props:{heading:"Everything you need, delivered.",sub:"Tech, furniture, home and more — shipped across South Africa.",btn:"Shop now",align:"center"}},
     {id:"p",type:"products",props:{title:"Featured products",cols:"3"}},
     {id:"c",type:"collection",props:{title:"Shop by category"}},
     {id:"t",type:"testimonial",props:{quote:"The quality is unreal and it arrived in two days.",author:"Lerato M., Johannesburg"}},
@@ -262,7 +262,7 @@
       }).join("")+'</div></div></section>';}
     if(b.type==="richtext")return '<section class="sec"><div class="wrapc"><div class="b-rich"><h2 style="font-family:var(--serif);font-size:1.9rem;font-weight:600;margin:0 0 14px">'+esc(p.heading)+'</h2><p>'+esc(p.body)+'</p></div></div></section>';
     if(b.type==="banner")return '<section class="sec"><div class="wrapc"><div class="b-banner"><div class="be">'+(p.emoji||"🎁")+'</div><div><h3>'+esc(p.heading)+'</h3><p>'+esc(p.sub)+'</p></div><button class="b-btn" data-scroll-products>'+esc(p.btn)+'</button></div></div></section>';
-    if(b.type==="collection"){var cats=[["👗","Fashion"],["💠","Beadwork"],["🌶️","Food & spice"],["🕯️","Home"]];
+    if(b.type==="collection"){var cats=[["🖥️","Electronics"],["🪑","Furniture"],["👟","Fashion"],["🏠","Home"]];
       return '<section class="sec"><div class="wrapc"><h2>'+esc(p.title)+'</h2><div class="cr">'+cats.map(function(c){return '<div class="cc"><div class="ccb"></div><span>'+c[0]+'</span><b>'+c[1]+'</b></div>'}).join("")+'</div></div></section>';}
     if(b.type==="testimonial")return '<section class="sec"><div class="wrapc"><div class="b-quote"><blockquote>"'+esc(p.quote)+'"</blockquote><div class="who">— '+esc(p.author)+'</div></div></div></section>';
     if(b.type==="newsletter")return '<section class="sec"><div class="wrapc"><div class="b-news"><h3>'+esc(p.heading)+'</h3><div class="nf"><input placeholder="you@example.co.za" aria-label="Email"><button class="b-btn" data-news>'+esc(p.btn)+'</button></div></div></div></section>';
@@ -286,7 +286,7 @@
     if(view==="store")storeMotion();
   }
   function announce(){
-    var msgs=['🚚 Free delivery on orders over <b>R500</b>','💳 Pay with <b>PayFast</b>, Yoco, Ozow or SnapScan','📦 Nationwide <b>Pudo</b> &amp; Courier Guy delivery','🇿🇦 Handmade in South Africa'];
+    var msgs=['🚚 Free delivery on orders over <b>R500</b>','💳 Pay with <b>PayFast</b>, Yoco, Ozow or SnapScan','📦 Nationwide <b>Pudo</b> &amp; Courier Guy delivery','🇿🇦 Proudly South Africa'];
     var row=msgs.map(function(m){return '<span>'+m+'</span>'}).join('');
     return '<div class="announce"><div class="mq">'+row+row+'</div></div>';
   }
@@ -295,7 +295,7 @@
       ['<path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/>','Nationwide delivery','Pudo, Courier Guy & PAXI'],
       ['<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>','Secure checkout','PayFast, Yoco, Ozow & SnapScan'],
       ['<path d="M3 12a9 9 0 109-9M3 7v5h5"/>','Easy returns','14-day hassle-free returns'],
-      ['<path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5"/>','Proudly local','Supporting South African makers']
+      ['<path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5"/>','Proudly local','Supporting South African business']
     ];
     return '<section class="benefits"><div class="row">'+b.map(function(x){return '<div class="benefit"><div class="bi">'+svg(x[0])+'</div><div><h4>'+x[1]+'</h4><p>'+x[2]+'</p></div></div>'}).join('')+'</div></section>';
   }

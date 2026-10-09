@@ -271,20 +271,20 @@ a,button{font-family:var(--f)}
 
   // ---------- state ----------
   var seed={
-    store:{name:"Indlela Craft Co.", tagline:"Proudly South African, delivered to your door."},
+    store:{name:"Northgate Trading", tagline:"Proudly South African, delivered to your door."},
     nextOrder:1002,
     setup:{product:true, theme:false, payment:true, shipping:false, test:false},
     products:[
-      {id:"p1",title:"Organic Rooibos Tea",desc:"250g loose-leaf, Cederberg grown",price:8900,stock:120,img:"🍵",active:true},
-      {id:"p2",title:"Original Beef Biltong",desc:"500g, air-dried the old way",price:18500,stock:60,img:"🥩",active:true},
-      {id:"p3",title:"Shweshwe Tote Bag",desc:"Handmade, three-cat print",price:24900,stock:24,img:"👜",active:true},
-      {id:"p4",title:"Beaded Earrings",desc:"Hand-strung Zulu beadwork",price:16000,stock:40,img:"💠",active:true},
-      {id:"p5",title:"Braai Spice Rub",desc:"200g all-purpose smoky rub",price:7500,stock:200,img:"🌶️",active:true},
-      {id:"p6",title:"Handwoven Basket",desc:"Natural ilala palm, large",price:42000,stock:0,img:"🧺",active:true}
+      {id:"p1",title:"27\" 4K Monitor",desc:"IPS panel, 60Hz, HDMI + USB-C",price:429900,stock:18,img:"🖥️",active:true},
+      {id:"p2",title:"Oak Desk Chair",desc:"Ergonomic, adjustable lumbar",price:245000,stock:12,img:"🪑",active:true},
+      {id:"p3",title:"Wireless Earbuds",desc:"Active noise cancelling, 30h",price:89900,stock:64,img:"🎧",active:true},
+      {id:"p4",title:"Running Shoes",desc:"Road, sizes 6-12",price:129900,stock:40,img:"👟",active:true},
+      {id:"p5",title:"Cotton Towel Set",desc:"4-piece, 550gsm",price:54900,stock:200,img:"🧺",active:true},
+      {id:"p6",title:"Cordless Drill 18V",desc:"2 batteries, carry case",price:189900,stock:0,img:"🔧",active:true}
     ],
     orders:[
-      {id:1001,num:"#1001",name:"Thandi Mokoena",email:"thandi@example.co.za",date:Date.now()-86400000,status:"Paid",fulfil:"Unfulfilled",items:[{title:"Original Beef Biltong",qty:1,price:18500,img:"🥩"},{title:"Braai Spice Rub",qty:2,price:7500,img:"🌶️"}],ship:9900,shipName:"The Courier Guy",pay:"PayFast",example:true},
-      {id:1000,num:"#1000",name:"Sipho Dlamini",email:"sipho@example.co.za",date:Date.now()-3*86400000,status:"Paid",fulfil:"Fulfilled",items:[{title:"Shweshwe Tote Bag",qty:1,price:24900,img:"👜"}],ship:6000,shipName:"Pudo Locker",pay:"Yoco",example:true}
+      {id:1001,num:"#1001",name:"Thandi Mokoena",email:"thandi@example.co.za",date:Date.now()-86400000,status:"Paid",fulfil:"Unfulfilled",items:[{title:"Wireless Earbuds",qty:1,price:89900,img:"🥩"},{title:"Braai Spice Rub",qty:2,price:7500,img:"🌶️"}],ship:9900,shipName:"The Courier Guy",pay:"PayFast",example:true},
+      {id:1000,num:"#1000",name:"Sipho Dlamini",email:"sipho@example.co.za",date:Date.now()-3*86400000,status:"Paid",fulfil:"Fulfilled",items:[{title:"Running Shoes",qty:1,price:129900,img:"👟"}],ship:6000,shipName:"Pudo Locker",pay:"Yoco",example:true}
     ]
   };
   var S=load();
@@ -389,7 +389,7 @@ a,button{font-family:var(--f)}
     h+='<div class="metrics">'+m.map(function(x){return '<div class="metric"><div class="lab">'+x[0]+'</div><div class="val money">'+x[1]+'</div><div class="chg">'+x[2]+'</div></div>'}).join("")+'</div>';
     // setup guide
     var setup=[
-      ["product","Add your first product","Rooibos, biltong, crafts — whatever you sell."],
+      ["product","Add your first product","Electronics, furniture, groceries — whatever you sell."],
       ["payment","Set up payments","PayFast, Yoco, Ozow & SnapScan supported."],
       ["shipping","Set up shipping","Pudo lockers, The Courier Guy, or local pickup."],
       ["theme","Customise your store","Make the storefront match your brand."],
@@ -452,7 +452,7 @@ a,button{font-family:var(--f)}
       var p=editing.id?editing:{title:"",desc:"",price:"",stock:"",img:"🛍️",active:true};
       h+='<div class="modal" data-stop><div class="modal-head"><h3>'+(editing.id?"Edit product":"Add product")+'</h3><button class="x" data-action="close-overlay">'+icon("x")+'</button></div>'+
       '<div class="modal-body"><form id="pform">'+
-        '<div class="field"><label>Title</label><input name="title" value="'+esc(p.title)+'" required placeholder="e.g. Organic Rooibos Tea"></div>'+
+        '<div class="field"><label>Title</label><input name="title" value="'+esc(p.title)+'" required placeholder="e.g. 27&quot; 4K Monitor"></div>'+
         '<div class="field"><label>Description</label><textarea name="desc" placeholder="Short description">'+esc(p.desc)+'</textarea></div>'+
         '<div class="grid2"><div class="field"><label>Price (ZAR) <span class="hint">incl. VAT</span></label><input name="price" type="number" step="0.01" min="0" value="'+(p.price!==""?(p.price/100):"")+'" required placeholder="89.00"></div>'+
         '<div class="field"><label>Stock</label><input name="stock" type="number" min="0" value="'+(p.stock!==""?p.stock:"")+'" required placeholder="100"></div></div>'+
