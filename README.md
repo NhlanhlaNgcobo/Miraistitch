@@ -83,6 +83,7 @@ everything else into one order of work and enforces the performance gate.
 | `skills/premium-motion/hyperframes-frames` | 13 complete design systems (locked palette, full type ramp, spacing, signature components) + an 18-token theme contract |
 | `skills/premium-motion/web-motion-stack` | 22 web-native skills — smooth scroll, page transitions, ScrollTrigger, Three.js / R3F / Babylon / PixiJS, Rive, Spline, Motion, react-spring, React Bits + Magic UI references, Blender→web pipeline |
 | `skills/premium-motion/motion-design-film` | **Video, not web** — HTML + Playwright + ffmpeg → MP4. For when the deliverable is an actual video file. |
+| `skills/magic-ui` | **79 animated React components** (Magic UI, MIT) — kinetic text, ambient backgrounds, CTA treatments, device mockups. Ships its own Claude skill; installs per-project via the shadcn registry. |
 
 Also: [`anti-ai-motion.md`](skills/premium-motion/premium-motion-site/references/anti-ai-motion.md) —
 the named causes and fixes for machine-made motion. Spring presets, the banned list, "one thing
