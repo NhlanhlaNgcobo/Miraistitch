@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { supabaseConfigured } from "@/lib/config";
+import SetupNotice from "@/components/SetupNotice";
 import type { Block, Product, Store } from "@/types";
 import Storefront from "./storefront";
 
@@ -12,6 +14,7 @@ const DEFAULT_BLOCKS: Block[] = [
 ];
 
 export default async function StorePage({ params }: { params: { slug: string } }) {
+  if (!supabaseConfigured) return <SetupNotice where="The storefront" />;
   const db = createClient();
 
   const { data: store } = await db.from("stores").select("*").eq("slug", params.slug).single();

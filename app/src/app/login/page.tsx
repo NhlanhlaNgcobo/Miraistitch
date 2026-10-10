@@ -2,11 +2,15 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { supabaseConfigured } from "@/lib/config";
+import SetupNotice from "@/components/SetupNotice";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [err, setErr] = useState("");
+
+  if (!supabaseConfigured) return <SetupNotice where="Sign-in" />;
 
   async function send(e: React.FormEvent) {
     e.preventDefault();

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { supabaseConfigured } from "@/lib/config";
+import SetupNotice from "@/components/SetupNotice";
 import NavLink from "./nav-link";
 import "./admin.css";
 
@@ -19,6 +21,7 @@ export const dynamic = "force-dynamic";
  * away at all times.
  */
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  if (!supabaseConfigured) return <SetupNotice where="The admin console" />;
   const db = createClient();
   const {
     data: { user },

@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { supabaseConfigured } from "@/lib/config";
 
 /**
  * Two jobs, in order:
@@ -73,6 +74,10 @@ export async function middleware(request: NextRequest) {
   } else {
     response = NextResponse.next({ request });
   }
+
+  // No backend yet → keep the tenant rewrite, skip the auth-session refresh so the
+  // landing, login and storefronts still render instead of 500-ing on a missing URL.
+  if (!supabaseConfigured) return response;
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

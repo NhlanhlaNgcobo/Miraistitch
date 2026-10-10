@@ -71,6 +71,14 @@
   .chip .cd{font-size:.74rem;color:var(--muted)}
   .hint-box{margin-top:14px;font-size:.78rem;color:var(--stone);line-height:1.5;background:rgba(255,255,255,.4);border:1px dashed var(--glass-border);border-radius:12px;padding:12px}
 
+  /* AI store builder panel */
+  .ai-box{background:linear-gradient(135deg,rgba(217,169,78,.22),rgba(255,255,255,.5));border:1px solid var(--glass-border);border-radius:14px;padding:13px;margin-bottom:16px}
+  .ai-label{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-deep);margin:0 0 9px;display:flex;align-items:center;gap:6px}
+  .ai-box textarea{width:100%;border:1px solid var(--glass-border);border-radius:10px;padding:9px 11px;background:rgba(255,255,255,.82);font-family:var(--f);font-size:.85rem;resize:vertical;min-height:60px;margin-bottom:9px;color:var(--ink)}
+  .ai-box textarea:focus{outline:none;border-color:var(--gold)}
+  .ai-box .tbtn{width:100%;justify-content:center}
+  .ai-note{font-size:.7rem;color:var(--muted);margin-top:9px;line-height:1.45}
+
   /* canvas */
   .stage-wrap{border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;min-height:0}
   .stage-scroll{flex:1;overflow-y:auto;padding:22px;display:flex;justify-content:center}
@@ -185,6 +193,12 @@
   <div class="cols">
     <!-- PALETTE -->
     <aside class="panel glass left" id="palette">
+      <div class="ai-box">
+        <div class="ai-label">✨ AI store builder</div>
+        <textarea id="aiPrompt" placeholder="Describe your store — e.g. &quot;premium home-office furniture, modern and practical&quot;"></textarea>
+        <button class="tbtn gold" id="aiGo">Generate my store</button>
+        <div class="ai-note">Demo — composes a starter layout from your words, then edit &amp; publish. The live app writes it with Claude.</div>
+      </div>
       <h3>Blocks — drag onto your store</h3>
       <div id="chips"></div>
       <div class="hint-box">Drag a block onto the canvas, drop it where you want, then click it to edit. Reorder by dragging a block up or down.</div>
@@ -386,6 +400,50 @@
   $("#btnSave").addEventListener("click",function(){persist();var b=this;var old=b.innerHTML;b.innerHTML="Published ✓";if(G)G.fromTo(b,{scale:.9},{scale:1,duration:.3,ease:"back.out(2)"});setTimeout(function(){b.innerHTML=old},1400)});
   $("#btnPreview").addEventListener("click",function(){document.body.classList.add("preview");selected=null;renderStage();if(G)G.from(".blk",{opacity:0,y:14,duration:.4,stagger:.05,ease:"power2.out"})});
   $("#btnExit").addEventListener("click",function(){document.body.classList.remove("preview");renderStage()});
+
+  // ---- AI store builder (demo: composes a layout from a prompt, client-side) ----
+  // The live app sends this prompt to Claude and validates the returned block JSON; here we
+  // map keywords to a sensible starter layout + copy so the feature is usable offline.
+  var AIKW=[
+    {re:/fashion|cloth|apparel|wear|boutique|shoe|footwear/, cat:"Fashion", heading:"Wear what moves you.", sub:"Fresh drops and everyday staples, shipped across South Africa."},
+    {re:/electron|tech|gadget|phone|laptop|computer|audio|gaming/, cat:"Electronics", heading:"Tech that keeps up.", sub:"The latest devices and accessories, delivered to your door."},
+    {re:/furnitur|home|decor|interior|sofa|desk|office/, cat:"Home & furniture", heading:"Make your space yours.", sub:"Furniture and décor for every room, delivered nationwide."},
+    {re:/beauty|skincare|cosmetic|wellness|health|pharmac/, cat:"Beauty & wellness", heading:"Care, beautifully packaged.", sub:"Skincare, wellness and self-care, delivered fast."},
+    {re:/food|grocer|snack|coffee|drink|spice|pantry/, cat:"Food & grocery", heading:"Good things to your door.", sub:"Fresh picks and pantry staples, delivered across SA."},
+    {re:/craft|handmade|artisan|bead|pottery|art/, cat:"Handmade & craft", heading:"Made by hand, sold with ease.", sub:"One-of-a-kind pieces from local makers."},
+    {re:/sport|fitness|outdoor|gym|cycl|run|camp/, cat:"Sport & outdoor", heading:"Gear up and go.", sub:"Kit for every workout and weekend, delivered."},
+    {re:/tool|hardware|auto|build|trade|diy/, cat:"Tools & hardware", heading:"Built for the job.", sub:"Trade-grade tools and parts, shipped nationwide."}
+  ];
+  function aiGenerate(prompt){
+    var p=(prompt||"").toLowerCase();
+    var m=null; for(var i=0;i<AIKW.length;i++){ if(AIKW[i].re.test(p)){ m=AIKW[i]; break; } }
+    var cat=m?m.cat:"Everyday", heading=m?m.heading:"Everything you need, in one store.",
+        sub=m?m.sub:"A little of everything, delivered across South Africa.";
+    var premium=/premium|luxur|high-end|high end|boutique|designer|elegant|upmarket/.test(p);
+    var sale=/sale|discount|deal|clearance|affordable|budget|cheap|promo/.test(p);
+    var minimal=/minimal|simple|clean|just/.test(p);
+    if(premium) sub="Considered pieces, beautifully delivered. "+sub;
+    var L=[];
+    L.push({id:uid(),type:"hero",props:{heading:heading,sub:sub,btn:premium?"Explore the range":"Shop now",align:premium?"left":"center"}});
+    if(sale) L.push({id:uid(),type:"banner",props:{emoji:"🏷️",heading:"Up to 30% off this week",sub:"Limited stock — shop before it's gone.",btn:"Shop the sale"}});
+    L.push({id:uid(),type:"products",props:{title:(m?cat+" picks":"Featured products"),cols:"3"}});
+    if(!minimal) L.push({id:uid(),type:"collection",props:{title:"Shop by category"}});
+    if(!minimal) L.push({id:uid(),type:"testimonial",props:{quote:"Ordered Monday, delivered Wednesday — exactly as described.",author:"Lerato M., Johannesburg"}});
+    L.push({id:uid(),type:"newsletter",props:{heading:"Join the list",btn:"Subscribe"}});
+    return L;
+  }
+  var aiGo=$("#aiGo"), aiPrompt=$("#aiPrompt");
+  if(aiGo) aiGo.addEventListener("click",function(){
+    var val=(aiPrompt&&aiPrompt.value||"").trim();
+    if(!val){ if(aiPrompt) aiPrompt.focus(); return; }
+    var old=aiGo.innerHTML; aiGo.disabled=true; aiGo.innerHTML="Generating…";
+    setTimeout(function(){
+      layout=aiGenerate(val); selected=layout[0].id;
+      renderStage(layout[0].id); renderInspector(); persist();
+      aiGo.disabled=false; aiGo.innerHTML=old;
+      var sc=$("#scroll"); if(sc) sc.scrollTop=0;
+    }, 650);
+  });
 
   // ---- init + load animation ----
   renderStage();renderInspector();
